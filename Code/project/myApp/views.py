@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from .forms import LoginForm
+from .forms import LoginForm, RegisterationForm
 # Create your views here.
 
 
@@ -13,7 +13,7 @@ def index(request):
     if request.user.is_authenticated:
         return HttpResponse("Hello, world. You're at the myApp index. You are logged in as " + request.user.username)
     else:
-        return HttpResponse("Hello, world. You're at the myApp index.")
+        return redirect('/myApp/login/')
 
 def login(request):
     if (request.method == 'POST'):
@@ -22,16 +22,46 @@ def login(request):
         if form.is_valid():
             Username = form.UserName
             Password = form.Password
-            user = authenticate(request, username = Username, password=Password)
-            if user is not None:
-                auth_login(request, user)
-                return redirect('/myApp')
+            if User.objects.filter(username=Username).exists():
+                user = authenticate(request, username = Username, password=Password)
+                if user is not None:
+                    auth_login(request, user)
+                    return redirect('/myApp')
+                else:
+                    return HttpResponse("Login Failed!!")
             else:
-                return HttpResponse("Login Failed!!")
+                return HttpResponse("User does not exist")
         else:
-            return HttpResponse("Login Failed")
+            return HttpResponse("Login Failed enter valid credentials")
     else:
         return render(request, 'myApp/login.html')
+    
+def register(request):
+    if (request.method == 'POST'):
+        print(request.POST)
+        form  = RegisterationForm(request.POST)
+        if form.is_valid():
+            print("Here")
+            Username = form.UserName
+            Password = form.Password
+            LastName = form.LastName
+            FirstName = form.FirstName
+            Email = form.Email
+            if User.objects.filter(username=Username).exists():
+                return HttpResponse("User already exists")
+            else:
+                user = User.objects.create_user(username=Username, password=Password)
+                user.last_name = LastName
+                user.first_name = FirstName
+                user.email = Email
+                user.save()
+                print("User created")
+                return redirect('/myApp')
+        else:
+            print("Here2")
+            return HttpResponse("Registration Failed")
+    else:
+        return render(request, 'myApp/register.html')
     
 def logout(request):
     auth_logout(request)
