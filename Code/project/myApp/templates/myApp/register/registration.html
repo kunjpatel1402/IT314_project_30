@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./registration.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+	<title>Document</title>
+</head>
+<body>
+	<div class="wrapper">
+        <div class="text-center mt-4 name">
+            Registration
+        </div>
+        <form class="p-3 mt-3">
+            <div class="form-field d-flex align-items-center">
+                <span class="far fa-user"></span>
+                <input type="text" name="userName" id="userName" placeholder="Username" required autocomplete="off"/>
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fa fa-id-card"></span>
+                <input type="text" name="fstname" id="fstname" placeholder="First Name" required autocomplete="hv"/>
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fa fa-id-card"></span>
+                <input type="text" name="lstname" id="lstname" placeholder="Last Name" required autocomplete="nope"/>
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fa fa-envelope"></span>
+                <input type="email" name="_emailid" id="_emaiid" placeholder="email" required autocomplete="nope"/>
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                <input type="password" name="password" id="pwd" placeholder="Password" required>
+            </div>
+            <button class="btn mt-3">Register</button>
+        </form>
+    </div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</body>
+</html>
