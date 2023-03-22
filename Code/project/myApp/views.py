@@ -6,8 +6,18 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from .forms import LoginForm, RegisterationForm
+import pymongo
 # Create your views here.
 
+
+client = pymongo.MongoClient("mongodb+srv://superuser:superuser%40SWE30@swe-cluster.xxvswrz.mongodb.net/?retryWrites=true&w=majority")
+
+# main database (switch to main database after testing only)
+# db = client["swe_db"]
+
+# test database
+db = client["swe_test_db"]
+user_collection = db["users"]
 
 def index(request):
     if request.user.is_authenticated:
