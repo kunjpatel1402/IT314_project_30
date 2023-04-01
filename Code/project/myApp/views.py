@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from .forms import LoginForm, RegisterationForm, PostForm
+from .forms import LoginForm, RegisterationForm, PostIncidentForm, PostPropertyForm
 import pymongo
 # Create your views here.
 
@@ -76,22 +76,38 @@ def register(request):
 def logout(request):
     auth_logout(request)
     return redirect('/myApp')
-
-def post(request):
+    
+def PostIncident(request):
     if request.user.is_authenticated:
         if (request.method == 'POST'):
             print(request.POST)
-            form  = PostForm(request.POST, request.user.username)
+            form  = PostIncidentForm(request.POST, request.user.username)
             if form.is_valid():
                 return HttpResponse("Post Successful")
             else:
                 print("Here2")
                 return HttpResponse("Post Failed")
         else:
-            return render(request, 'myApp/post.html')
+            return render(request, 'myApp/postIncident.html')
     else:
         return redirect('/myApp/login/')
-    
+
+def PostProperty(request):
+    if request.user.is_authenticated:
+        if (request.method == 'POST'):
+            print(request.POST)
+            form  = PostPropertyForm(request.POST, request.user.username)
+            if form.is_valid():
+                return HttpResponse("Post Successful")
+            else:
+                print("Here2")
+                return HttpResponse("Post Failed")
+        else:
+            return render(request, 'myApp/postProperty.html')
+    else:
+        return redirect('/myApp/login/')
+
+
 def profile(request):
     if request.user.is_authenticated:
         return render(request, 'myApp/profile.html', {'username': request.user.username})
