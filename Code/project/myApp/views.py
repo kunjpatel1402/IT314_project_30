@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from .forms import LoginForm, RegisterationForm
+from .forms import LoginForm, RegisterationForm, PostForm
 import pymongo
 # Create your views here.
 
@@ -76,3 +76,42 @@ def register(request):
 def logout(request):
     auth_logout(request)
     return redirect('/myApp')
+
+def post(request):
+    if request.user.is_authenticated:
+        if (request.method == 'POST'):
+            print(request.POST)
+            form  = PostForm(request.POST, request.user.username)
+            if form.is_valid():
+                return HttpResponse("Post Successful")
+            else:
+                print("Here2")
+                return HttpResponse("Post Failed")
+        else:
+            return render(request, 'myApp/post.html')
+    else:
+        return redirect('/myApp/login/')
+    
+def profile(request):
+    if request.user.is_authenticated:
+        return render(request, 'myApp/profile.html', {'username': request.user.username})
+    else:
+        return redirect('/myApp/login/')
+    
+def SeePosts(requests, PostID):
+    if requests.user.is_authenticated:
+        if requests.method == 'GET':
+            return render(requests, 'myApp/SeePosts.html', {'PostID': PostID})
+    else:
+        return redirect('/myApp/login/')
+
+def SeeProfiles(requests, ProfileID):
+    if requests.user.is_authenticated:
+        if (requests.method == 'GET'):
+            if (User.objects.filter(username=ProfileID).exists()):
+                return render(requests, 'myApp/SeeProfiles.html', {'username': ProfileID})
+            else:
+                return HttpResponse("User does not exist")
+    else:
+        return redirect('/myApp/login/')
+    

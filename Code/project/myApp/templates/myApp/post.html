@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>Post</title>
+    </head>
+    <body>
+        <h1>My App</h1>
+        <h2>Post</h2>
+        <form action = "/myApp/post/" method="post">
+            {% csrf_token %}
+            <input type="text" name="Title" placeholder="Title" />
+            <input type="text" name="Description" placeholder="Description" />
+            <button>Post</button>
+        </form>
+    </body>
+</html>
