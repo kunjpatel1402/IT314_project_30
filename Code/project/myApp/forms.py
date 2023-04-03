@@ -25,6 +25,7 @@ class PostIncidentForm():
         self.longitude = data['Longitude']
         self.latitude = data['Latitude']
         self.author = username
+        self.curtime = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         self.post_ID = username + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     def is_valid(self):
         return True
@@ -39,6 +40,7 @@ class PostPropertyForm():
         self.is_authentic = False
         self.upvotes = 0
         self.downvotes = 0
+        self.score = 0
         self.post_ID = username + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     def is_valid(self):
         return True
