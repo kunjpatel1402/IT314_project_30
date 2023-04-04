@@ -5,17 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="./unreg_hmpg.css">
+    {% load static %}
+    <link rel="stylesheet" href="{%static 'myApp/unreg_hmpg.css'%}" type="text/css">
 </head>
 <body>
     <nav id="navbar">
         <div id="logo">
-            <a href="#"><img src="./logo.png" alt=""></a>
+            <a href="#"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
         </div>
         <ul>
             <li><a href="#">Incident Feed</a></li>
             <li><a href="#">Property Feed</a></li>
-            <li><a href="#">Sign In/Register</a></li>
+            <li><a href="/myApp/login">Sign In/Register</a></li>
         </ul>
     </nav>
 </body>
