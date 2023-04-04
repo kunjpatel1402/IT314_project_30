@@ -7,15 +7,17 @@
     box-sizing: border-box;
 }
 
-body::before{
-    content: "";
-    background: url(./black-map-bg-bg.jpg) no-repeat center center/cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
+body:before {
+	content:"";
+	position:fixed;
+	left:0;
+	top:0;
+	right:0;
+	bottom:0;
+	z-index:-1;
+	display:block;
+	background:url(./black-map-bg-bg.jpg) no-repeat 50% 50%;
+	background-size:cover;
 }
 
 
