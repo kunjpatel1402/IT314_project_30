@@ -12,8 +12,7 @@ import math
 # Create your views here.
 
 
-client = pymongo.MongoClient(
-    "mongodb+srv://superuser:superuser%40SWE30@swe-cluster.xxvswrz.mongodb.net/?retryWrites=true&w=majority")
+client = pymongo.MongoClient("mongodb+srv://superuser:superuser%40SWE30@swe-cluster.xxvswrz.mongodb.net/?retryWrites=true&w=majority")
 
 # main database (switch to main database after testing only)
 # db = client["swe_db"]
@@ -24,64 +23,66 @@ user_collection = db["users"]
 
 
 def index(request):
-    if request.user.is_authenticated:
-        return HttpResponse("Hello, world. You're at the myApp index. You are logged in as " + request.user.username)
+    username = request.session.get('username')
+    if username is not None:
+        return render(request, 'myApp/reg_hmpg.html')
     else:
-        return redirect('/myApp/login/')
+        return render(request, 'myApp/unreg_hmpg.html')
 
 
 def login(request):
-    if (request.method == 'POST'):
-        print(request.POST)
+    if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            Username = form.UserName
-            Password = form.Password
-            if User.objects.filter(username=Username).exists():
-                user = authenticate(request, username=Username, password=Password)
-                if user is not None:
-                    auth_login(request, user)
-                    return redirect('/myApp')
-                else:
-                    return HttpResponse("Login Failed!!")
+            query = {"username": form.UserName, "password": form.Password}
+            projection = {"_id": 0, "username": 1}
+
+            user = user_collection.find_one(query, projection)
+
+            if user is not None:
+                request.session['username'] = user['username']
+                request.session.save()
+                return redirect('/myApp')
             else:
-                return HttpResponse("User does not exist")
+                error_message = "Invalid username or password"
+                return render(request, 'myApp/login.html', {'error_message': error_message})
         else:
-            return HttpResponse("Login Failed enter valid credentials")
+            error_message = "Enter credentials"
+            return render(request, 'myApp/login.html', {'error_message': error_message})
     else:
         return render(request, 'myApp/login.html')
 
 
 def register(request):
-    if (request.method == 'POST'):
-        print(request.POST)
+    if request.method == 'POST':
         form = RegisterationForm(request.POST)
         if form.is_valid():
-            print("Here")
-            Username = form.UserName
-            Password = form.Password
-            LastName = form.LastName
-            FirstName = form.FirstName
-            Email = form.Email
-            if User.objects.filter(username=Username).exists():
-                return HttpResponse("User already exists")
-            else:
-                user = User.objects.create_user(username=Username, password=Password)
-                user.last_name = LastName
-                user.first_name = FirstName
-                user.email = Email
-                user.save()
-                print("User created")
+            query = {"username": form.UserName}
+            projection = {"_id": 0, "username": 1}
+
+            user = user_collection.find_one(query, projection)
+
+            if user is None:
+                new_user = {
+                    "username": form.UserName,
+                    "password": form.Password,
+                    "first_name": form.FirstName,
+                    "last_name": form.LastName,
+                    "email": form.Email
+                }
+                user_collection.insert_one(new_user)
+                request.session['username'] = new_user['username']
+                request.session.save()
                 return redirect('/myApp')
-        else:
-            print("Here2")
-            return HttpResponse("Registration Failed")
+            else:
+                error_message = "Username already exists"
+                return render(request, 'myApp/register.html', {'error_message': error_message})
     else:
         return render(request, 'myApp/register.html')
 
 
 def logout(request):
-    auth_logout(request)
+    request.session.flush()
     return redirect('/myApp')
 
 
@@ -175,9 +176,9 @@ def calculate_score(property_list, incident_list):
 
 
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(hourly_function(), 'interval', hours=1)
-scheduler.start()
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(hourly_function(), 'interval', hours=1)
+# scheduler.start()
 
 
 
