@@ -1,17 +1,38 @@
-<html>
-    <head>
-        <title>Post</title>
-    </head>
-    <body>
-        <h1>My App</h1>
-        <h2>Post</h2>
-        <form action = "/myApp/postIncident/" method="post">
-            {% csrf_token %}
-            <input type="text" name="Title" placeholder="Title" />
-            <input type="text" name="Description" placeholder="Description" />
-            <input type="number" step = "0.00001" name="Latitude" placeholder="Latitude" />
-            <input type="number" step = "0.00001" name="Longitude" placeholder="Longitude" />
-            <button>Post</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel="stylesheet" href="./PostInc.css" >
+    <title>Post Incident</title>
+</head>
+<body>
+	<div class="wrapper">
+        <div class="text-center mt-4 name">
+            Post an Incident
+        </div>
+        <form class="p-3 mt-3" action = "/myApp/postProperty/" method="post">
+            <div class="form-field d-flex align-items-center">
+                <span class="far fa-user"></span>
+                <input type="text" name="Title" placeholder="Title" required/>
+            </div>
+            <textarea name="Description" id="Description" cols="53" rows="10" placeholder="Add Description" required></textarea>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                <input type="number" step = "0.00001" name="Latitude" placeholder="Latitude" min="-90" max="90" required/>
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                <input type="number" step = "0.00001" name="Longitude" placeholder="Longitude" min="-180" max="180" required/>
+            </div>
+            <button class="btn mt-3">Post Incident</button>
         </form>
-    </body>
+    </div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</body>
 </html>
+
