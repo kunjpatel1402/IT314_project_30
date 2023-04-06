@@ -180,6 +180,132 @@ def get_properties_by_crime_and_hazard_safety_percentiles(json_data):
     hazard_value = json_data['hazard_value']
     return collection.find({'$and': [{'crime_safety_percentile': {'$gt': crime_value}}, {'hazard_safety_percentile': {'$gt': hazard_value}}]})
 
+
+'''                                      USER                                            '''
+
+def insert_user(json_data):
+    db = client['project']
+    collection = db['userData']
+    user = {
+        'username': json_data['username'],
+        'firstname': json_data['firstname'],
+        'lastname' : json_data['lastname'],
+        'email': json_data['email'],
+        'password': json_data['password'],
+        'DOB': json_data['DOB'],
+        'address': {
+            'address_line_1': json_data['address_line_1'],
+            'address_line_2': json_data['address_line_2'],
+            'city' : json_data['city'],
+            'pincode': json_data['pincode'],
+            'location': {
+                'type': 'Point',
+                'coordinates': [
+                    json_data['longitude'],
+                    json_data['latitude']
+                ]
+            },
+            'state' : json_data['state'],
+            'country': json_data['country'],
+        },
+        'contact': {
+            'mobile_number': json_data['mobile_number'],
+            'instagram_handle': json_data['instagram_handle'],
+            'twitter_handle': json_data['twitter_handle']
+        },
+        'profile_picture': json_data['profile_picture'],
+        'user-role': json_data['user-role']
+    }
+    result = collection.insert_one(user)
+    return result.inserted_id
+    
+'''                                      HAZARD                                            '''
+
+def insert_hazard(json_data):
+    db = client['project']
+    collection = db['hazardData']
+    hazard = {
+        'type': json_data['type'],
+        'location': {
+            'type': 'Point',
+            'coordinates': [
+                json_data['longitude'],
+                json_data['latitude']
+            ]
+        },
+        'pincode':json_data['pincode'],
+        'city':json_data['city'],
+        'locality':json_data['locality'],
+        'description': json_data['description'],
+        'upvotes':json_data['upvotes'],
+        'downvotes':json_data['downvotes'],
+        'date': json_data['date'],
+        'is-verified': json_data['is-verified'],
+        'author': json_data['author'],
+        'user-role': json_data['user-role']
+    }
+    result = collection.insert_one(hazard)
+    return result.inserted_id
+
+def search_hazard_by_locality(json_data):
+    db = client['project']
+    collection = db['hazardData']
+    loc = json_data['locality']
+    hazards = collection.find({'locality':loc})
+    for hazard in hazards:
+        print(hazard)
+    return hazards
+
+def search_hazard_by_city(json_data):
+    db = client['project']
+    collection = db['hazardData']
+    city = json_data['city']
+    hazards = collection.find({'city':city})
+    for hazard in hazards:
+        print(hazard)
+    return hazards
+
+def get_hazard_within_range(json_data):
+    db = client['project']
+    collection = db['hazardData']
+    longitude = json_data['longitude']
+    latitude = json_data['latitude']
+
+    min_longitude = longitude - 0.15
+    max_longitude = longitude + 0.15
+    min_latitude = latitude - 0.15
+    max_latitude = latitude + 0.15
+    print(min_longitude,max_longitude,min_latitude,max_latitude)
+    query = {
+        'location.coordinates.0': {
+            '$gt': min_longitude,
+            '$lt': max_longitude
+        },
+        'location.coordinates.1': {
+            '$gt': min_latitude,
+            '$lt': max_latitude
+        }
+    }
+    incidents = collection.find(query)
+    for inci in incidents:
+        print(inci)
+    return incidents
+
+def verify_hazard_incidents():
+    db = client['project']
+    collection = db['hazardData']
+    query = {
+        {
+            'user-role':'normal',
+            'upvotes': {
+                '$gt': 100,
+            }
+        }
+    }
+    verified_hazard = collection.find(query)
+    return verified_hazard
+
+
 ### -------------------------------------------------------------------------------------------------------------------------------- ###
 
 if __name__ == '__main__':
