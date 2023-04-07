@@ -10,13 +10,6 @@ from .forms import LoginForm, RegisterationForm, PostIncidentForm, PostPropertyF
 import pymongo
 import math
 import sys, os
-# Create your views here.
-def blockPrint():
-    sys.stdout = open(os.devnull, 'w')
-
-# Restore
-def enablePrint():
-    sys.stdout = sys.__stdout__
 
 
 client = pymongo.MongoClient("mongodb+srv://superuser:superuser%40SWE30@swe-cluster.xxvswrz.mongodb.net/?retryWrites=true&w=majority")
@@ -32,9 +25,7 @@ property_collection = db["properties"]
 
 
 def index(request):
-    blockPrint()
     username = request.session.get('username')
-    enablePrint()
     if username is not None:
         return render(request, 'myApp/reg_hmpg.html')
     else:
@@ -66,7 +57,7 @@ def login(request):
 
 def register(request):
     if request.method == 'POST':
-        print(request.POST)
+        #print(request.POST)
         form = RegisterationForm(request.POST)
         if form.is_valid():
             query = {"username": form.UserName}
@@ -201,10 +192,10 @@ def calculate_score(property_list, incident_list):
 
 def PostIncident(request):
     username = request.session.get('username')
-    print(username)
+    #print(username)
     if username is not None:
         if (request.method == 'POST'):
-            print(request.POST)
+            #print(request.POST)
             form = PostIncidentForm(request.POST, username)
             if form.is_valid():
                 # call the score function here
@@ -222,7 +213,7 @@ def PostIncident(request):
                 incident_collection.insert_one(new_incident)
                 return HttpResponse("Post Successful")
             else:
-                print("Here2")
+                #print("Here2")
                 return HttpResponse("Post Failed")
         else:
             return render(request, 'myApp/postIncident.html')
@@ -231,10 +222,10 @@ def PostIncident(request):
 
 def PostProperty(request):
     username = request.session.get('username')
-    print(username)
+    #print(username)
     if username is not None:
         if (request.method == 'POST'):
-            print(request.POST)
+            #print(request.POST)
             form = PostPropertyForm(request.POST, username)
             if form.is_valid():
                 # call the score function here
@@ -257,7 +248,7 @@ def PostProperty(request):
                 property_collection.insert_one(new_property)
                 return HttpResponse("Post Successful")
             else:
-                print("Here2")
+                #print("Here2")
                 return HttpResponse("Post Failed")
         else:
             return render(request, 'myApp/PostProperty.html')
@@ -296,7 +287,7 @@ def SeeProfiles(requests, ProfileID):
 
 def Changepassword(request):
     if (request.method == 'POST'):
-        print(request.POST)
+        #print(request.POST)
         form = ChangePasswordForm(request.POST)
         if form.is_valid():
             query = {"username": form.UserName}
@@ -314,7 +305,7 @@ def Changepassword(request):
                     #change password
                     return HttpResponse("Password Changed")
         else:
-            print("Here2")
+            #print("Here2")
             error_message = "Passwords in both fields do not match"
             return render(request, 'myApp/changePassword.html', {'error_message': error_message})
     else:
