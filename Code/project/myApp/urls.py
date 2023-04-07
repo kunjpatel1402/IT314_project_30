@@ -11,5 +11,6 @@ urlpatterns = [
     path('postProperty/', views.PostProperty, name='PostProperty'),
     path('profile/', views.profile, name='profile'),
     path('seepost/<str:PostID>', views.SeePosts, name='SeePosts'),
-    path('seeprofile/<str:ProfileID>', views.SeeProfiles, name='SeeProfiles')
+    path('seeprofile/<str:ProfileID>', views.SeeProfiles, name='SeeProfiles'),
+    path('changePassword/', views.Changepassword, name='Changepassword')
 ]

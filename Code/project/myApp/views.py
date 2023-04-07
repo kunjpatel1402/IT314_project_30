@@ -5,11 +5,18 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-from .forms import LoginForm, RegisterationForm, PostIncidentForm, PostPropertyForm
-from apscheduler.schedulers.background import BackgroundScheduler
+from .forms import LoginForm, RegisterationForm, PostIncidentForm, PostPropertyForm, ChangePasswordForm
+#from apscheduler.schedulers.background import BackgroundScheduler
 import pymongo
 import math
+import sys, os
 # Create your views here.
+def blockPrint():
+    sys.stdout = open(os.devnull, 'w')
+
+# Restore
+def enablePrint():
+    sys.stdout = sys.__stdout__
 
 
 client = pymongo.MongoClient("mongodb+srv://superuser:superuser%40SWE30@swe-cluster.xxvswrz.mongodb.net/?retryWrites=true&w=majority")
@@ -20,10 +27,13 @@ client = pymongo.MongoClient("mongodb+srv://superuser:superuser%40SWE30@swe-clus
 # test database
 db = client["swe_test_db"]
 user_collection = db["users"]
+incident_collection = db["incident"]
 
 
 def index(request):
+    blockPrint()
     username = request.session.get('username')
+    enablePrint()
     if username is not None:
         return render(request, 'myApp/reg_hmpg.html')
     else:
@@ -55,6 +65,7 @@ def login(request):
 
 def register(request):
     if request.method == 'POST':
+        print(request.POST)
         form = RegisterationForm(request.POST)
         if form.is_valid():
             query = {"username": form.UserName}
@@ -68,7 +79,8 @@ def register(request):
                     "password": form.Password,
                     "first_name": form.FirstName,
                     "last_name": form.LastName,
-                    "email": form.Email
+                    "email": form.Email,
+                    "dob": form.DOB
                 }
                 user_collection.insert_one(new_user)
                 request.session['username'] = new_user['username']
@@ -187,13 +199,56 @@ def calculate_score(property_list, incident_list):
 
 
 def PostIncident(request):
-    if request.user.is_authenticated:
+    username = request.session.get('username')
+    print(username)
+    if username is not None:
         if (request.method == 'POST'):
             print(request.POST)
-            form = PostIncidentForm(request.POST, request.user.username)
+            form = PostIncidentForm(request.POST, username)
             if form.is_valid():
                 # call the score function here
-                hourly_function()
+                #hourly_function()
+                new_incident = {
+                    "author": form.author,
+                    "title": form.title,
+                    "description": form.description,
+                    "longitude": form.longitude,
+                    "latitude": form.latitude,
+                    "post_id": form.post_ID,
+                    "incident_type": form.incident_type,
+                    "time": form.time
+                }
+                incident_collection.insert_one(new_incident)
+                return HttpResponse("Post Successful")
+            else:
+                print("Here2")
+                return HttpResponse("Post Failed")
+        else:
+            return render(request, 'myApp/postIncident.html')
+    else:
+        return redirect('/myApp/login/')
+
+def PostProperty(request):
+    username = request.session.get('username')
+    print(username)
+    if username is not None:
+        if (request.method == 'POST'):
+            print(request.POST)
+            form = PostIncidentForm(request.POST, username)
+            if form.is_valid():
+                # call the score function here
+                #hourly_function()
+                new_incident = {
+                    "author": form.author,
+                    "title": form.title,
+                    "description": form.description,
+                    "longitude": form.longitude,
+                    "latitude": form.latitude,
+                    "post_id": form.post_ID,
+                    "incident_type": form.incident_type,
+                    "time": form.time
+                }
+                incident_collection.insert_one(new_incident)
                 return HttpResponse("Post Successful")
             else:
                 print("Here2")
@@ -204,22 +259,7 @@ def PostIncident(request):
         return redirect('/myApp/login/')
 
 
-def PostProperty(request):
-    if request.user.is_authenticated:
-        if (request.method == 'POST'):
-            print(request.POST)
-            form = PostPropertyForm(request.POST, request.user.username)
-            if form.is_valid():
-                #call the score function here
-                calculate_score()
-                return HttpResponse("Post Successful")
-            else:
-                print("Here2")
-                return HttpResponse("Post Failed")
-        else:
-            return render(request, 'myApp/postProperty.html')
-    else:
-        return redirect('/myApp/login/')
+
 
 
 def profile(request):
@@ -246,3 +286,30 @@ def SeeProfiles(requests, ProfileID):
                 return HttpResponse("User does not exist")
     else:
         return redirect('/myApp/login/')
+
+
+def Changepassword(request):
+    if (request.method == 'POST'):
+        print(request.POST)
+        form = ChangePasswordForm(request.POST)
+        if form.is_valid():
+            query = {"username": form.UserName}
+            projection = {"_id": 0, "username": 1}
+            user_ = user_collection.find_one(query, projection)
+            if user_ is None:
+                return HttpResponse("User does not exist" + form.UserName)
+            else:
+                query = {"DOB": form.DOB}
+                projection = {"_id": 0, "username": 1}
+                user_ = user_collection.find_one(query, projection)
+                if user_ is None:
+                    return HttpResponse("Incorrect DOB")
+                else:
+                    #change password
+                    return HttpResponse("Password Changed")
+        else:
+            print("Here2")
+            error_message = "Passwords in both fields do not match"
+            return render(request, 'myApp/changePassword.html', {'error_message': error_message})
+    else:
+        return render(request, 'myApp/changePassword.html')

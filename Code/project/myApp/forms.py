@@ -15,6 +15,7 @@ class RegisterationForm():
         self.LastName = data['LastName']
         self.Email = data['Email']
         self.Password = data['Password']
+        self.DOB = data['DOB']
     def is_valid(self):
         return True
     
@@ -25,6 +26,11 @@ class PostIncidentForm():
         self.longitude = data['Longitude']
         self.latitude = data['Latitude']
         self.author = username
+        self.incident_type = 0
+        self.time = data['Time']
+        self.is_authentic = False
+        self.upvotes = 0
+        self.downvotes = 0
         self.post_ID = username + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     def is_valid(self):
         return True
@@ -36,9 +42,17 @@ class PostPropertyForm():
         self.longitude = data['Longitude']
         self.latitude = data['Latitude']
         self.author = username
-        self.is_authentic = False
-        self.upvotes = 0
-        self.downvotes = 0
+        self.score = 0
+        self.pincode = data['Pincode']
         self.post_ID = username + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     def is_valid(self):
         return True
+    
+class ChangePasswordForm():
+    def __init__(self, data):
+        self.UserName = data['UserName']
+        self.DOB = data['DOB']
+        self.new_password = data['newPassword']
+        self.confirm_password = data['confirmNewPassword']
+    def is_valid(self):
+        return (self.confirm_password==self.new_password)
