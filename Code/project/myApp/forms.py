@@ -44,6 +44,11 @@ class PostPropertyForm():
         self.author = username
         self.score = 0
         self.pincode = data['Pincode']
+        self.city = data['City']
+        self.state = data['State']
+        self.country = data['Country']
+        self.address_line1 = data['AddressLine1']
+        self.address_line2 = data['AddressLine2']
         self.post_ID = username + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
     def is_valid(self):
         return True

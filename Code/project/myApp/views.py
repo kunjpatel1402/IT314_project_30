@@ -28,6 +28,7 @@ client = pymongo.MongoClient("mongodb+srv://superuser:superuser%40SWE30@swe-clus
 db = client["swe_test_db"]
 user_collection = db["users"]
 incident_collection = db["incident"]
+property_collection = db["properties"]
 
 
 def index(request):
@@ -234,27 +235,32 @@ def PostProperty(request):
     if username is not None:
         if (request.method == 'POST'):
             print(request.POST)
-            form = PostIncidentForm(request.POST, username)
+            form = PostPropertyForm(request.POST, username)
             if form.is_valid():
                 # call the score function here
                 #hourly_function()
-                new_incident = {
+                new_property = {
                     "author": form.author,
                     "title": form.title,
                     "description": form.description,
                     "longitude": form.longitude,
                     "latitude": form.latitude,
-                    "post_id": form.post_ID,
-                    "incident_type": form.incident_type,
-                    "time": form.time
+                    "score": form.score,
+                    "pincode": form.pincode,
+                    "address_line1": form.address_line1,
+                    "address_line2": form.address_line2,
+                    "city": form.city,
+                    "state": form.state,
+                    "country": form.country,
+                    "post_ID": form.post_ID,
                 }
-                incident_collection.insert_one(new_incident)
+                property_collection.insert_one(new_property)
                 return HttpResponse("Post Successful")
             else:
                 print("Here2")
                 return HttpResponse("Post Failed")
         else:
-            return render(request, 'myApp/postIncident.html')
+            return render(request, 'myApp/PostProperty.html')
     else:
         return redirect('/myApp/login/')
 
