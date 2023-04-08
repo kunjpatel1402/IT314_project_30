@@ -15,6 +15,7 @@ class RegisterationForm():
         self.LastName = data['LastName']
         self.Email = data['Email']
         self.Password = data['Password']
+        self.ConfirmPassword = data['ConfirmPassword']
         self.DOB = data['DOB']
     def is_valid(self):
         return True

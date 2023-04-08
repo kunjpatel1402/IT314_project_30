@@ -60,6 +60,10 @@ def register(request):
         #print(request.POST)
         form = RegisterationForm(request.POST)
         if form.is_valid():
+            if form.Password != form.ConfirmPassword:
+                error_message = "Passwords do not match"
+                return render(request, 'myApp/register.html', {'error_message': error_message})
+
             query = {"username": form.UserName}
             projection = {"_id": 0, "username": 1}
 
