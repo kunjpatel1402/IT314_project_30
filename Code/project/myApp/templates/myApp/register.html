@@ -13,7 +13,7 @@
 <body>
 	<nav id="navbar">
 		<div id="logo">
-		    <a href="#"><img src="./logo.png" alt=""></a>
+		    <a href="#"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
 		</div>
 		<ul>
 		    <li><a href="#">Incident Feed</a></li>
@@ -36,10 +36,6 @@
                 <span class="far fa-user"></span>
                 <input type="text" name="UserName" id="userName" placeholder="Username" required autocomplete="off"/>
             </div>
-            <div class="mb-3">
-                <label for="DOB" class="form-label">Date of Birth</label>
-                <input type="date" class="form-control" id="DOB" name="DOB" required>
-            </div>
             <div class="form-field d-flex align-items-center">
                 <span class="fa fa-id-card"></span>
                 <input type="text" name="FirstName" id="fstname" placeholder="First Name" required autocomplete="hv"/>
@@ -49,12 +45,20 @@
                 <input type="text" name="LastName" id="lstname" placeholder="Last Name" required autocomplete="nope"/>
             </div>
             <div class="form-field d-flex align-items-center">
+                <span class="fa fa-calendar"></span>
+                <input type="text" class="form-control" id="DOB" name="DOB" onfocus="this.type='date'" placeholder="Date of Birth (DD-MM-YYYY)" required>
+            </div>
+            <div class="form-field d-flex align-items-center">
                 <span class="fa fa-envelope"></span>
-                <input type="email" name="Email" id="_emaiid" placeholder="email" required autocomplete="nope"/>
+                <input type="email" name="Email" id="_emaiid" placeholder="Email" required autocomplete="nope"/>
             </div>
             <div class="form-field d-flex align-items-center">
                 <span class="fas fa-key"></span>
                 <input type="password" name="Password" id="pwd" placeholder="Password" required>
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                <input type="password" name="ConfirmPassword" id="pwd" placeholder="Confirm Password" required>
             </div>
             <button class="btn mt-3">Register</button>
         </form>
