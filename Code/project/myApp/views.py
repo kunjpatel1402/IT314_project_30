@@ -290,27 +290,25 @@ def SeeProfiles(requests, ProfileID):
 
 
 def Changepassword(request):
-    if (request.method == 'POST'):
-        #print(request.POST)
+    if request.method == 'POST':
         form = ChangePasswordForm(request.POST)
         if form.is_valid():
             query = {"username": form.UserName}
-            projection = {"_id": 0, "username": 1}
-            user_ = user_collection.find_one(query, projection)
-            if user_ is None:
-                return HttpResponse("User does not exist" + form.UserName)
+            user = user_collection.find_one(query)
+            if user is None:
+                error_message = "User does not exist"
+                return render(request, 'myApp/changePassword.html', {'error_message': error_message})
             else:
-                query = {"DOB": form.DOB}
-                projection = {"_id": 0, "username": 1}
-                user_ = user_collection.find_one(query, projection)
-                if user_ is None:
-                    return HttpResponse("Incorrect DOB")
+                if user['dob'] != form.DOB:
+                    error_message = "Incorrect Date of Birth"
+                    return render(request, 'myApp/changePassword.html', {'error_message': error_message})
                 else:
-                    #change password
-                    return HttpResponse("Password Changed")
+                    query = {"username": form.UserName}
+                    new_values = {"$set": {"password": form.new_password}}
+                    user_collection.update_one(query, new_values)
+                    return redirect('/myApp/login/')
         else:
-            #print("Here2")
-            error_message = "Passwords in both fields do not match"
+            error_message = "Passwords do not match"
             return render(request, 'myApp/changePassword.html', {'error_message': error_message})
     else:
         return render(request, 'myApp/changePassword.html')
