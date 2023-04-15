@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Upvote/Downvote Example</title>
+  <link rel="stylesheet" href="./PostVote.css">
+</head>
+
+<body>
+  <h1>Upvote/Downvote Example</h1>
+  <div class="vote-buttons">
+    <button id="upvote-button">Upvote</button>
+    <button id="downvote-button">Downvote</button>
+  </div>
+  <div id="vote-count"></div>
+  <script>
+    function updateVoteCount(count) {
+      const voteCount = document.getElementById('vote-count');
+      voteCount.innerText = `Current vote count: ${count}`;
+    }
+    
+    const upvoteButton = document.getElementById('upvote-button');
+    const downvoteButton = document.getElementById('downvote-button');
+
+    upvoteButton.addEventListener('click', () => {
+      fetch('/upvote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.count);
+          updateVoteCount(data.count);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    });
+    
+
+    downvoteButton.addEventListener('click', () => {
+      fetch('/downvote', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.count);
+          updateVoteCount(data.count);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    });
+
+    fetch('/vote-count')
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.count);
+        updateVoteCount(data.count);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+  </script>
+</body>
+
+</html>
