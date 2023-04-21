@@ -98,7 +98,7 @@ At the end when the testing for login is over, the dummy data in the database wi
 #### Code :
 ``` python
     class RegisterTestCase(TestCase):
-    def _init_(self):
+    def __init__(self):
         self.c = Client()
         print("Register Test Case Started ---------------------------------------------")
 
@@ -161,7 +161,7 @@ At the end when the testing for registration is over, the dummy data in the data
 ### 3. Duplicate Registeration Testcase:
 ``` python
     class DuplicateRegisterTestCase(TestCase):
-    def _init_(self):
+    def __init__(self):
         self.c = Client()
         print("Duplicate Register Test Case Started ---------------------------------------------")
     def setUp(self):
