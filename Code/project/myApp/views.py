@@ -268,8 +268,15 @@ def Upvote(request, PostID):
             upvoted = myuser['upvoted']
             #print(downvoted)
             #print(upvoted)
-            if (post is None) or (downvoted.get(PostID) != None) or (upvoted.get(PostID) != None):
+            if (post is None) or (downvoted.get(PostID) != None):
                 return HttpResponse(status = 500)
+            elif upvoted.get(PostID) != None:
+                new_values = {"$set": {"upvotes": post['upvotes'] - 1}}
+                incident_collection.update_one(query, new_values)
+                upvoted.pop(PostID)
+                new_values = {"$set": {"upvoted": upvoted}}
+                user_collection.update_one({"UserName": username}, new_values)
+                return HttpResponse(status = 200)
             else:
                 #print("upvoting")
                 new_values = {"$set": {"upvotes": post['upvotes'] + 1}}
@@ -290,8 +297,15 @@ def Downvote(requests, PostID):
             myuser = user_collection.find_one({"UserName": username})
             downvoted = myuser['downvoted']
             upvoted = myuser['upvoted']
-            if (post is None) or (upvoted.get(PostID) != None) or (downvoted.get(PostID) != None):
+            if (post is None) or (upvoted.get(PostID) != None):
                 return HttpResponse(status = 500)
+            elif downvoted.get(PostID) != None:
+                new_values = {"$set": {"downvotes": post['downvotes'] - 1}}
+                incident_collection.update_one(query, new_values)
+                downvoted = downvoted.pop(PostID)
+                new_values = {"$set": {"downvoted": downvoted}}
+                user_collection.update_one({"UserName": username}, new_values)
+                return HttpResponse(status = 200)
             else:
                 new_values = {"$set": {"downvotes": post['downvotes'] + 1}}
                 incident_collection.update_one(query, new_values)
