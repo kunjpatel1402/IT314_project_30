@@ -202,19 +202,7 @@ def PostIncident(request):
             #print(request.POST)
             form = PostIncidentForm(request.POST, username)
             if form.is_valid():
-                # call the score function here
-                #hourly_function()
-                new_incident = {
-                    "author": form.author,
-                    "title": form.title,
-                    "description": form.description,
-                    "longitude": form.longitude,
-                    "latitude": form.latitude,
-                    "post_id": form.post_ID,
-                    "incident_type": form.incident_type,
-                    "time": form.time
-                }
-                incident_collection.insert_one(new_incident)
+                incident_collection.insert_one(form.to_dict())
                 return HttpResponse("Post Successful")
             else:
                 #print("Here2")
@@ -232,24 +220,7 @@ def PostProperty(request):
             #print(request.POST)
             form = PostPropertyForm(request.POST, username)
             if form.is_valid():
-                # call the score function here
-                #hourly_function()
-                new_property = {
-                    "author": form.author,
-                    "title": form.title,
-                    "description": form.description,
-                    "longitude": form.longitude,
-                    "latitude": form.latitude,
-                    "score": form.score,
-                    "pincode": form.pincode,
-                    "address_line1": form.address_line1,
-                    "address_line2": form.address_line2,
-                    "city": form.city,
-                    "state": form.state,
-                    "country": form.country,
-                    "post_ID": form.post_ID,
-                }
-                property_collection.insert_one(new_property)
+                property_collection.insert_one(form.to_dict())
                 return HttpResponse("Post Successful")
             else:
                 #print("Here2")
@@ -264,30 +235,63 @@ def PostProperty(request):
 
 
 def profile(request):
-    if request.user.is_authenticated:
+    username = request.session.get('username')
+    if username is not None:
         return render(request, 'myApp/profile.html', {'username': request.user.username})
     else:
         return redirect('/myApp/login/')
 
 
-def SeePosts(requests, PostID):
-    if requests.user.is_authenticated:
-        if requests.method == 'GET':
-            return render(requests, 'myApp/SeePosts.html', {'PostID': PostID})
+def SeePosts(request, PostID):
+    username = request.session.get('username')
+    if username is not None:
+        if request.method == 'GET':
+            return render(request, 'myApp/SeePosts.html', {'PostID': PostID})
     else:
         return redirect('/myApp/login/')
 
 
-def SeeProfiles(requests, ProfileID):
-    if requests.user.is_authenticated:
-        if (requests.method == 'GET'):
-            if (User.objects.filter(username=ProfileID).exists()):
-                return render(requests, 'myApp/SeeProfiles.html', {'username': ProfileID})
+def SeeProfiles(request, ProfileID):
+    username = request.session.get('username')
+    if username is not None:
+        if (request.method == 'GET'):
+            if user_collection.find_one({"username": ProfileID}) is not None:
+                return render(request, 'myApp/SeeProfiles.html', {'username': ProfileID})
             else:
                 return HttpResponse("User does not exist")
     else:
         return redirect('/myApp/login/')
 
+
+def Upvote(request, PostID):
+    username = request.session.get('username')
+    if username is not None:
+        if (request.method == 'GET'):
+            query = {"post_ID": PostID}
+            post = incident_collection.find_one(query)
+            if post is None:
+                return HttpResponse(status = 500)
+            else:
+                new_values = {"$set": {"upvotes": post['upvotes'] + 1}}
+                incident_collection.update_one(query, new_values)
+                return HttpResponse(status = 200)
+    else:
+        return redirect('/myApp/login/')
+    
+def Downvote(requests, PostID):
+    username = requests.session.get('username')
+    if username is not None:
+        if (requests.method == 'GET'):
+            query = {"post_ID": PostID}
+            post = incident_collection.find_one(query)
+            if post is None:
+                return HttpResponse(status = 500)
+            else:
+                new_values = {"$set": {"downvotes": post['downvotes'] + 1}}
+                incident_collection.update_one(query, new_values)
+                return HttpResponse(status = 200)
+    else:
+        return redirect('/myApp/login/')
 
 def Changepassword(request):
     if request.method == 'POST':

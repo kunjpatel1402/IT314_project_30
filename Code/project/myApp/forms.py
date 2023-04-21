@@ -24,35 +24,65 @@ class PostIncidentForm():
     def __init__(self, data, username):
         self.title = data['Title']
         self.description = data['Description']
-        self.longitude = data['Longitude']
-        self.latitude = data['Latitude']
+        self.longitude = float(data['Longitude'])
+        self.latitude = float(data['Latitude'])
         self.author = username
         self.incident_type = 0
         self.time = data['Time']
         self.is_authentic = False
         self.upvotes = 0
         self.downvotes = 0
-        self.post_ID = username + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        self.post_ID = username + datetime.now().strftime("%m:%d:%Y:%H:%M:%S")
     def is_valid(self):
         return True
+    def to_dict(self):
+        return {
+            'title': self.title,
+            'description': self.description,
+            'longitude': self.longitude,
+            'latitude': self.latitude,
+            'author': self.author,
+            'incident_type': self.incident_type,
+            'time': self.time,
+            'is_authentic': self.is_authentic,
+            'upvotes': self.upvotes,
+            'downvotes': self.downvotes,
+            'post_ID': self.post_ID
+        }
     
 class PostPropertyForm():
     def __init__(self, data, username):
         self.title = data['Title']
         self.description = data['Description']
-        self.longitude = data['Longitude']
-        self.latitude = data['Latitude']
+        self.longitude = float(data['Longitude'])
+        self.latitude = float(data['Latitude'])
         self.author = username
         self.score = 0
-        self.pincode = data['Pincode']
+        self.pincode = int(data['Pincode'])
         self.city = data['City']
         self.state = data['State']
         self.country = data['Country']
         self.address_line1 = data['AddressLine1']
         self.address_line2 = data['AddressLine2']
-        self.post_ID = username + datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        self.post_ID = username + datetime.now().strftime("%m:%d:%Y:%H:%M:%S")
     def is_valid(self):
         return True
+    def to_dict(self):
+        return {
+            'title': self.title,
+            'description': self.description,
+            'longitude': self.longitude,
+            'latitude': self.latitude,
+            'author': self.author,
+            'score': self.score,
+            'pincode': self.pincode,
+            'city': self.city,
+            'state': self.state,
+            'country': self.country,
+            'address_line1': self.address_line1,
+            'address_line2': self.address_line2,
+            'post_ID': self.post_ID
+        }
     
 class ChangePasswordForm():
     def __init__(self, data):
