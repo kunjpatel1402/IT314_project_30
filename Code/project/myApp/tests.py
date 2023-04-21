@@ -76,7 +76,7 @@ class LoginTestCase(TestCase):
 test = LoginTestCase()
 test.runTest()
 class RegisterTestCase(TestCase):
-    def _init_(self):
+    def __init__(self):
         self.c = Client()
         print("Register Test Case Started ---------------------------------------------")
 
@@ -125,7 +125,7 @@ test = RegisterTestCase()
 test.runTest()
 
 class DuplicateRegisterTestCase(TestCase):
-    def _init_(self):
+    def __init__(self):
         self.c = Client()
         print("Duplicate Register Test Case Started ---------------------------------------------")
     def setUp(self):
