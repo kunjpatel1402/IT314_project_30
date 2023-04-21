@@ -306,18 +306,18 @@ def Changepassword(request):
     if request.method == 'POST':
         form = ChangePasswordForm(request.POST)
         if form.is_valid():
-            query = {"username": form.UserName}
+            query = {"UserName": form.UserName}
             user = user_collection.find_one(query)
             if user is None:
                 error_message = "User does not exist"
                 return render(request, 'myApp/changePassword.html', {'error_message': error_message})
             else:
-                if user['dob'] != form.DOB:
+                if user['DOB'] != form.DOB:
                     error_message = "Incorrect Date of Birth"
                     return render(request, 'myApp/changePassword.html', {'error_message': error_message})
                 else:
-                    query = {"username": form.UserName}
-                    new_values = {"$set": {"password": form.new_password}}
+                    query = {"UserName": form.UserName}
+                    new_values = {"$set": {"Password": form.new_password}}
                     user_collection.update_one(query, new_values)
                     return redirect('/myApp/login/')
         else:
