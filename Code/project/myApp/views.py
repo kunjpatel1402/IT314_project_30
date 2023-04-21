@@ -36,13 +36,13 @@ def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
-            query = {"username": form.UserName, "password": form.Password}
-            projection = {"_id": 0, "username": 1}
+            query = {"UserName": form.UserName, "Password": form.Password}
+            projection = {"_id": 0, "UserName": 1}
 
             user = user_collection.find_one(query, projection)
 
             if user is not None:
-                request.session['username'] = user['username']
+                request.session['username'] = user['UserName']
                 request.session.save()
                 return redirect('/myApp')
             else:
@@ -64,8 +64,8 @@ def register(request):
                 error_message = "Passwords do not match"
                 return render(request, 'myApp/register.html', {'error_message': error_message})
 
-            query = {"username": form.UserName}
-            projection = {"_id": 0, "username": 1}
+            query = {"UserName": form.UserName}
+            projection = {"_id": 0, "UserName": 1}
 
             user = user_collection.find_one(query, projection)
 
