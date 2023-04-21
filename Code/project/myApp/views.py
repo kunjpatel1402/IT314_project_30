@@ -70,16 +70,8 @@ def register(request):
             user = user_collection.find_one(query, projection)
 
             if user is None:
-                new_user = {
-                    "username": form.UserName,
-                    "password": form.Password,
-                    "first_name": form.FirstName,
-                    "last_name": form.LastName,
-                    "email": form.Email,
-                    "dob": form.DOB
-                }
-                user_collection.insert_one(new_user)
-                request.session['username'] = new_user['username']
+                user_collection.insert_one(form.to_dict())
+                request.session['username'] = form.UserName
                 request.session.save()
                 return redirect('/myApp')
             else:
@@ -269,11 +261,22 @@ def Upvote(request, PostID):
         if (request.method == 'GET'):
             query = {"post_ID": PostID}
             post = incident_collection.find_one(query)
-            if post is None:
+            myuser = user_collection.find_one({"UserName": username})
+            #print("here\n\n\n")
+            #print(myuser)
+            downvoted = myuser['downvoted']
+            upvoted = myuser['upvoted']
+            #print(downvoted)
+            #print(upvoted)
+            if (post is None) or (downvoted.get(PostID) != None) or (upvoted.get(PostID) != None):
                 return HttpResponse(status = 500)
             else:
+                #print("upvoting")
                 new_values = {"$set": {"upvotes": post['upvotes'] + 1}}
                 incident_collection.update_one(query, new_values)
+                upvoted[PostID] = True
+                new_values = {"$set": {"upvoted": upvoted}}
+                user_collection.update_one({"UserName": username}, new_values)
                 return HttpResponse(status = 200)
     else:
         return redirect('/myApp/login/')
@@ -284,11 +287,17 @@ def Downvote(requests, PostID):
         if (requests.method == 'GET'):
             query = {"post_ID": PostID}
             post = incident_collection.find_one(query)
-            if post is None:
+            myuser = user_collection.find_one({"UserName": username})
+            downvoted = myuser['downvoted']
+            upvoted = myuser['upvoted']
+            if (post is None) or (upvoted.get(PostID) != None) or (downvoted.get(PostID) != None):
                 return HttpResponse(status = 500)
             else:
                 new_values = {"$set": {"downvotes": post['downvotes'] + 1}}
                 incident_collection.update_one(query, new_values)
+                downvoted[PostID] = True
+                new_values = {"$set": {"downvoted": downvoted}}
+                user_collection.update_one({"UserName": username}, new_values)
                 return HttpResponse(status = 200)
     else:
         return redirect('/myApp/login/')

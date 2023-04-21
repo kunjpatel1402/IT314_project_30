@@ -17,8 +17,21 @@ class RegisterationForm():
         self.Password = data['Password']
         self.ConfirmPassword = data['ConfirmPassword']
         self.DOB = data['DOB']
+        self.upvoted = {"hello": True, "world": True}
+        self.downvoted = {"hello": True, "world": True}
     def is_valid(self):
         return True
+    def to_dict(self):
+        return {
+            'UserName': self.UserName,
+            'FirstName': self.FirstName,
+            'LastName': self.LastName,
+            'Email': self.Email,
+            'Password': self.Password,
+            'DOB': self.DOB,
+            'upvoted': self.upvoted,
+            'downvoted': self.downvoted
+        }
     
 class PostIncidentForm():
     def __init__(self, data, username):
