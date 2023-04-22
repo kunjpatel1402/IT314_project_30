@@ -14,5 +14,7 @@ urlpatterns = [
     path('seeprofile/<str:ProfileID>', views.SeeProfiles, name='SeeProfiles'),
     path('changePassword/', views.Changepassword, name='Changepassword'),
     path('upvote/<str:PostID>', views.Upvote, name='Upvote'),
-    path('downvote/<str:PostID>', views.Downvote, name='Downvote')
+    path('downvote/<str:PostID>', views.Downvote, name='Downvote'),
+    path('IncidentFeed/', views.IncidentFeed, name='IncidentFeed'),
+    path('PropertyFeed/', views.PropertyFeed, name='PropertyFeed')
 ]

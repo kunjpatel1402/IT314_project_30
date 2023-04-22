@@ -238,7 +238,9 @@ def SeePosts(request, PostID):
     username = request.session.get('username')
     if username is not None:
         if request.method == 'GET':
-            return render(request, 'myApp/SeePosts.html', {'PostID': PostID})
+            post = incident_collection.find_one({"post_ID": PostID})
+            author = user_collection.find_one({"UserName": post['author']})
+            return render(request, 'myApp/SeePosts.html', {'post': post, 'author': author})
     else:
         return redirect('/myApp/login/')
 
@@ -339,3 +341,20 @@ def Changepassword(request):
             return render(request, 'myApp/changePassword.html', {'error_message': error_message})
     else:
         return render(request, 'myApp/changePassword.html')
+    
+def IncidentFeed(request):
+    if (request.method == 'GET'):
+        posts = list(incident_collection.find())
+        print(posts)
+        return render(request, 'myApp/IncidentFeed.html', {'posts': posts})
+    else:
+        return HttpResponse("Error")
+    
+def PropertyFeed(request):
+    if (request.method == 'GET'):
+        posts = property_collection.find()
+        #print(posts)
+        return render(request, 'myApp/PropertyFeed.html', {'posts': posts})
+    else:
+        return HttpResponse("Error")
+    
