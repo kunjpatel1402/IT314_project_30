@@ -345,7 +345,7 @@ def Changepassword(request):
 def IncidentFeed(request):
     if (request.method == 'GET'):
         posts = list(incident_collection.find())
-        print(posts)
+        #print(posts)
         return render(request, 'myApp/IncidentFeed.html', {'posts': posts})
     else:
         return HttpResponse("Error")
