@@ -105,3 +105,10 @@ class ChangePasswordForm():
         self.confirm_password = data['confirmNewPassword']
     def is_valid(self):
         return (self.confirm_password==self.new_password)
+    
+class ForgotPasswordForm():
+    def __init__(self, data):
+        self.UserName = data['UserName']
+        self.DOB = data['DOB']
+    def is_valid(self):
+        return True
