@@ -295,14 +295,24 @@ def Upvote(request, PostID):
                 return HttpResponse(status = 200)
     else:
         return redirect('/myApp/login/')
-    
+
+def find_post(PostID):
+    query = {"post_ID": PostID}
+    post = incident_collection.find_one(query)
+    return post
+
+def find_user(username):
+    myuser = user_collection.find_one({"UserName": username})
+    return myuser
+
 def Downvote(requests, PostID):
     username = requests.session.get('username')
     if username is not None:
         if (requests.method == 'GET'):
-            query = {"post_ID": PostID}
-            post = incident_collection.find_one(query)
-            myuser = user_collection.find_one({"UserName": username})
+
+            post = find_post(PostID)
+            myuser = find_user(username)
+
             downvoted = myuser['downvoted']
             upvoted = myuser['upvoted']
             if (post is None) or (upvoted.get(PostID) != None):
@@ -367,4 +377,3 @@ def PropertyFeed(request):
         return render(request, 'myApp/PropertyFeed.html', {'posts': posts, 'user': user})
     else:
         return HttpResponse("Error")
-    
