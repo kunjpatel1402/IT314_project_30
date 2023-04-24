@@ -254,8 +254,9 @@ def SeeProfiles(request, ProfileID):
     username = request.session.get('username')
     if username is not None:
         if (request.method == 'GET'):
-            if user_collection.find_one({"username": ProfileID}) is not None:
-                return render(request, 'myApp/SeeProfiles.html', {'username': ProfileID})
+            user = user_collection.find_one({"UserName": ProfileID})
+            if user is not None:
+                return render(request, 'myApp/SeeProfile.html', {'user': user})
             else:
                 return HttpResponse("User does not exist")
     else:
