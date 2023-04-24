@@ -15,7 +15,7 @@ var longitude = document.getElementById('longitude');
 var latitude = document.getElementById('latitude');
 var marker;
 
-searchButton.addEventListener('click', function () {
+searchButton.addEventListener('click', function() {
   geocode(searchInput.value);
 });
 
@@ -23,10 +23,10 @@ function geocode(address) {
   var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(address) + '.json?access_token=' + mapboxgl.accessToken;
 
   fetch(url)
-    .then(function (response) {
+    .then(function(response) {
       return response.json();
     })
-    .then(function (data) {
+    .then(function(data) {
 
       if (data.features.length === 0) {
         document.getElementsByName('Latitude')[0].value = null;
@@ -47,8 +47,8 @@ function geocode(address) {
       console.log(location[1], location[0])
       longitude.textContent = 'Longitude: ' + location[0];
       latitude.textContent = 'Latitude: ' + location[1];
-      document.getElementsByName('Latitude')[0].value = data.features[0].center[1];
-      document.getElementsByName('Longitude')[0].value = data.features[0].center[0];
+      document.getElementsByName('Latitude')[0].value = (data.features[0].center[1]).toFixed(6);
+      document.getElementsByName('Longitude')[0].value = (data.features[0].center[0]).toFixed(6);
       err.textContent = null;
       map.flyTo({
         center: location,
@@ -63,22 +63,22 @@ function geocode(address) {
     });
 }
 
-map.on('click', function (e) {
+map.on('click', function(e) {
   var coordinates = e.lngLat;
   var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + coordinates.lng + ',' + coordinates.lat + '.json?access_token=' + mapboxgl.accessToken;
 
   fetch(url)
-    .then(function (response) {
+    .then(function(response) {
       return response.json();
     })
-    .then(function (data) {
+    .then(function(data) {
       var name = data.features[0].place_name;
       place.textContent = name;
       console.log(coordinates.long, coordinates.lat);
       longitude.textContent = 'Longitude: ' + coordinates.lng;
       latitude.textContent = 'Latitude: ' + coordinates.lat;
-      document.getElementsByName('Latitude')[0].value = data.features[0].center[1];
-      document.getElementsByName('Longitude')[0].value = data.features[0].center[0];
+      document.getElementsByName('Latitude')[0].value = (data.features[0].center[1]).toFixed(6);
+      document.getElementsByName('Longitude')[0].value = (data.features[0].center[0]).toFixed(6);
       err.textContent = null;
       if (marker) {
         marker.remove();
