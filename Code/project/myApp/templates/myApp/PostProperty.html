@@ -9,13 +9,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	{% load static %}
     <link rel="stylesheet" href="{%static 'myApp/postProperty.css'%}" type = "text/css">
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
+   <link href='https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css' rel='stylesheet' />
     <title>Document</title>
 </head>
 <body>
 	<nav id="navbar">
         <div id="logo">
           <a href="#"><img src="{% static 'myApp/logo.png' %}" alt=""></a>
-          <!-- <a href="#"><img src="./logo.png" alt=""></a> -->
+       
         </div>
         <ul>
             <li class="padtop">
@@ -27,7 +29,7 @@
                 </div>
             </li>
           <li class="padtop"><a href="/postincident">Post Incident</a></li>
-          <li class="padtop"><a href="/PostProperty.html">Post Property</a></li>
+          <li class="padtop"><a href="/PostProperty">Post Property</a></li>
           <li class="padtop"><a href="/incidentfeed_auth">Incident Feed</a></li>
           <li class="padtop"><a href="#">Property Feed</a></li>
           <li class="padtop"><a href="/logout">Sign Out</a></li>
@@ -47,7 +49,7 @@
             Post Property Information
         </div>
         <form class="p-3 mt-3" action = "/myApp/postProperty/" method="post">
-            {% csrf_token %}
+            <!-- {% csrf_token %} -->
             <div class="container">
                 <div class="row">
                     <div class = "column">
@@ -58,20 +60,39 @@
                     </div>
                 </div>
                 <textarea name="Description" id="Description" cols="53" rows="10" placeholder="Add Description" required></textarea>
+
+                 <div class="form-field d-flex align-items-center">
+        <input id='search-input' type='text' placeholder='Search for a location'>
+        <button id='search-button' type='button'>Search</button>
+        <!-- <p id="error-message"></p> -->
+      </div>
+              
                 <div class="row">
                     <div class = "column">
                         <div class="form-field d-flex align-items-center">
-                            <span class="fas fa-key"></span>
-                            <input type="number" step = "0.0001" name="Latitude" placeholder="Latitude" min="-90" max="90" required/>
+                        <span class="fas fa-key"></span>
+                     <input type="number" step="0.000001"  id='latitude' name="Latitude" placeholder="Latitude" min="-90" max="90" required />
                         </div>
-                    </div>
+                   </div>
                     <div class = "column">
-                        <div class="form-field d-flex align-items-center ">
-                            <span class="fas fa-key"></span>
-                            <input type="number" step = "0.0001" name="Longitude" placeholder="Longitude" min="-180" max="180" required/>
-                        </div>
+                        <div class="form-field d-flex align-items-center">
+        <span class="fas fa-key"></span>
+        <input type="number" step="0.000001" id='longitude' name="Longitude" placeholder="Longitude" min="-180" max="180"
+          required />
+      </div>
                     </div>
                 </div>
+
+       <div>
+        <p id='place'></p>
+        <p id='err'></p>
+        <!-- <p id='longitude'></p>
+        <p id='latitude'></p> -->
+      </div>
+      <div class="form-field " id='map'></div>
+
+
+              
 		<div class="row">
                     <div class = "column">
                         <div class="form-field d-flex align-items-center">
@@ -129,6 +150,10 @@
             <button class="btn mt-3">Post Property</button>
         </form>
     </div>
+
+  <script src=' https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js'>
+  </script>
+  <script src="{% static 'myApp/postproperty.js' %}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </body>
