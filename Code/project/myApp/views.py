@@ -34,6 +34,8 @@ def index(request):
 
 def login(request):
     if request.method == 'POST':
+        print(request.POST)
+        print("here")
         form = LoginForm(request.POST)
         if form.is_valid():
             query = {"UserName": form.UserName, "Password": form.Password}
@@ -47,6 +49,7 @@ def login(request):
                 return redirect('/myApp')
             else:
                 error_message = "Invalid username or password"
+                print("error")
                 return render(request, 'myApp/login.html', {'error_message': error_message})
         else:
             error_message = "Enter credentials"
@@ -229,7 +232,9 @@ def PostProperty(request):
 def profile(request):
     username = request.session.get('username')
     if username is not None:
-        return render(request, 'myApp/profile.html', {'username': request.user.username})
+        user = user_collection.find_one({"UserName": username})
+        #print(user)
+        return render(request, 'myApp/profile.html', {'user': user})
     else:
         return redirect('/myApp/login/')
 
@@ -278,7 +283,7 @@ def Upvote(request, PostID):
                 upvoted.pop(PostID)
                 new_values = {"$set": {"upvoted": upvoted}}
                 user_collection.update_one({"UserName": username}, new_values)
-                return HttpResponse(status = 200)
+                return HttpResponse(status = 201)
             else:
                 #print("upvoting")
                 new_values = {"$set": {"upvotes": post['upvotes'] + 1}}
@@ -307,7 +312,7 @@ def Downvote(requests, PostID):
                 downvoted = downvoted.pop(PostID)
                 new_values = {"$set": {"downvoted": downvoted}}
                 user_collection.update_one({"UserName": username}, new_values)
-                return HttpResponse(status = 200)
+                return HttpResponse(status = 201)
             else:
                 new_values = {"$set": {"downvotes": post['downvotes'] + 1}}
                 incident_collection.update_one(query, new_values)
@@ -345,8 +350,10 @@ def Changepassword(request):
 def IncidentFeed(request):
     if (request.method == 'GET'):
         posts = list(incident_collection.find())
+        username = request.session.get('username')
+        user = user_collection.find_one({"UserName": username})
         #print(posts)
-        return render(request, 'myApp/IncidentFeed.html', {'posts': posts})
+        return render(request, 'myApp/IncidentFeed.html', {'posts': posts, 'user': user})
     else:
         return HttpResponse("Error")
     
@@ -354,7 +361,9 @@ def PropertyFeed(request):
     if (request.method == 'GET'):
         posts = property_collection.find()
         #print(posts)
-        return render(request, 'myApp/PropertyFeed.html', {'posts': posts})
+        username = request.session.get('username')
+        user = user_collection.find_one({"UserName": username})
+        return render(request, 'myApp/PropertyFeed.html', {'posts': posts, 'user': user})
     else:
         return HttpResponse("Error")
     
