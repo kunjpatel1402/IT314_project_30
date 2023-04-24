@@ -79,6 +79,10 @@ body:before {
     color: white;
 }
 
+#navbar li span{
+    display: block;
+}
+
 
 /* Importing fonts from Google */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
@@ -93,7 +97,7 @@ body {
 body::before{
     content: "";
     background: url(./black-map-bg-bg.jpg) no-repeat center center/cover;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -197,4 +201,12 @@ body::before{
     }
 }
 
+#home{
+    text-align: center;
+}
 
+.padtop{
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-left: 16px;
+}

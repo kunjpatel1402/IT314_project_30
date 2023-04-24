@@ -74,4 +74,19 @@ body:before {
 
 #navbar li a:hover{
     color: white;
+    text-decoration: underline;
+}
+
+#navbar li span{
+    display: block;
+}
+
+#home{
+    text-align: center;
+}
+
+.padtop{
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-left: 16px;
 }

@@ -217,12 +217,18 @@ option{
     display: block;
 }
 
+#home{
+    text-align: center;
+}
+
 #profile{
     text-align: center;
 }
 
 .padtop{
     padding-top: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
 .wrapper .form-field button {

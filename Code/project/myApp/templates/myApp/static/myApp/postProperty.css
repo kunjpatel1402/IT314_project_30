@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
 
 * {
     margin: 0;
@@ -209,10 +209,16 @@ body:before {
     display: block;
 }
 
+#home{
+    text-align: center;
+}
+
 #profile{
     text-align: center;
 }
 
 .padtop{
     padding-top: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
 }
