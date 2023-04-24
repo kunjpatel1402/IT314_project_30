@@ -1,8 +1,9 @@
 import json
 import pymongo
 import datetime
+import random
+from bson.json_util import dumps
 
-# Define the connection to the MongoDB Atlas cluster
 client = pymongo.MongoClient('mongodb+srv://Kris:1DwQsf8Olmj1eOhW@cluster0.hvo47if.mongodb.net/test')
 
 '''                                      CRIME                                            '''
@@ -23,11 +24,11 @@ def insert_crime(json_data):
         'city':json_data['city'],
         'locality':json_data['locality'],
         'description': json_data['description'],
-        'upvotes':json_data['upvotes'],
-        'downvotes':json_data['downvotes'],
+        'upvotes': 0,
+        'downvotes': 0,
         'date': json_data['date'],
-        'is-verified': json_data['is-verified'],
-        'post-by-admin': json_data['post-by-admin']
+        'is-verified': False,
+        'post-by-admin': False
     }
     result = collection.insert_one(crime)
     return result.inserted_id
@@ -37,18 +38,16 @@ def search_crime_by_locality(json_data):
     collection = db['crimeData']
     loc = json_data['locality']
     crimes = collection.find({'locality':loc})
-    for crime in crimes:
-        print(crime)
-    return crimes
+    json_d = dumps(list(crimes))
+    return json_d
 
 def search_crime_by_city(json_data):
     db = client['project']
     collection = db['crimeData']
     city = json_data['city']
     crimes = collection.find({'city':city})
-    for crime in crimes:
-        print(crime)
-    return crimes
+    json_d = dumps(list(crimes))
+    return json_d
 
 def get_crime_within_range(json_data):
     db = client['project']
@@ -72,10 +71,10 @@ def get_crime_within_range(json_data):
         }
     }
     incidents = collection.find(query)
-    for inci in incidents:
-        print(inci)
-    return incidents
+    json_d = dumps(list(incidents))
+    return json_d
 
+# this is left
 def verify_crime_incidents():
     db = client['project']
     collection = db['crimeData']
@@ -88,7 +87,16 @@ def verify_crime_incidents():
         }
     }
     verified_crimes = collection.find(query)
-    return verified_crimes
+    json_d = dumps(list(verified_crimes))
+    return json_d
+
+def feed_crime_posts():
+    db = client['project']
+    collection = db['crimeData']
+    latest_entries = collection.find().sort('_id', -1).limit(20)
+    json_d = dumps(list(latest_entries))
+    print(json_d)
+    return json_d
 
 '''                                      PROPERTY                                            '''
 
@@ -140,37 +148,45 @@ def get_property_within_range(json_data):
         }
     }
     property = collection.find(query)
-    for house in property:
-        print(house)
-    return property
+    json_d = dumps(list(property))
+    return json_d
+
 
 # Query all properties in a specific city
 def get_properties_by_city(json_data):
     db = client['project']
     collection = db['PropertyData']
     city = json_data['city']
-    return collection.find({'city': city})
+    properties = collection.find({'city': city})
+    json_d = dumps(list(properties))
+    return json_d
 
 # Query all properties in a locality
 def get_properties_by_locality(json_data):
     db = client['project']
     collection = db['PropertyData']
     loc = json_data['locality']
-    return collection.find({'locality': loc})
+    properties = collection.find({'locality': loc})
+    json_d = dumps(list(properties))
+    return json_d
 
 # Query properties with a crime safety percentile score greater than a specified value
 def get_properties_by_crime_percentile(json_data):
     db = client['project']
     collection = db['PropertyData']
     value = json_data['value']
-    return collection.find({'crime_safety_percentile': {'$lt': value}})
+    properties = collection.find({'crime_safety_percentile': {'$lt': value}})
+    json_d = dumps(list(properties))
+    return json_d
 
 # Query properties with a hazard safety percentile score greater than a specified value
 def get_properties_by_hazard_safety_percentile(json_data):
     db = client['project']
     collection = db['PropertyData']
     value = json_data['value']
-    return collection.find({'hazard_safety_percentile': {'$lt': value}})
+    properties = collection.find({'hazard_safety_percentile': {'$lt': value}})
+    json_d = dumps(list(properties))
+    return json_d
 
 # Query properties with both crime and hazard safety percentile scores greater than specified values
 def get_properties_by_crime_and_hazard_safety_percentiles(json_data):
@@ -178,8 +194,9 @@ def get_properties_by_crime_and_hazard_safety_percentiles(json_data):
     collection = db['PropertyData']
     crime_value = json_data['crime_value']
     hazard_value = json_data['hazard_value']
-    return collection.find({'$and': [{'crime_safety_percentile': {'$gt': crime_value}}, {'hazard_safety_percentile': {'$gt': hazard_value}}]})
-
+    properties = collection.find({'$and': [{'crime_safety_percentile': {'$gt': crime_value}}, {'hazard_safety_percentile': {'$gt': hazard_value}}]})
+    json_d = dumps(list(properties))
+    return json_d
 
 '''                                      USER                                            '''
 
@@ -194,10 +211,10 @@ def insert_user(json_data):
         'password': json_data['password'],
         'DOB': json_data['DOB'],
         'address': {
-            'address_line_1': json_data['address_line_1'],
-            'address_line_2': json_data['address_line_2'],
-            'city' : json_data['city'],
-            'pincode': json_data['pincode'],
+            'address_line_1': '',
+            'address_line_2': '',
+            'city' : '',
+            'pincode': '',
             'location': {
                 'type': 'Point',
                 'coordinates': [
@@ -205,16 +222,16 @@ def insert_user(json_data):
                     json_data['latitude']
                 ]
             },
-            'state' : json_data['state'],
-            'country': json_data['country'],
+            'state' : '',
+            'country': '',
         },
         'contact': {
-            'mobile_number': json_data['mobile_number'],
-            'instagram_handle': json_data['instagram_handle'],
-            'twitter_handle': json_data['twitter_handle']
+            'mobile_number': '',
+            'instagram_handle': '',
+            'twitter_handle': '',
         },
-        'profile_picture': json_data['profile_picture'],
-        'user-role': json_data['user-role']
+        'profile_picture': '',
+        'user-role': 'normal',
     }
     result = collection.insert_one(user)
     return result.inserted_id
@@ -252,18 +269,16 @@ def search_hazard_by_locality(json_data):
     collection = db['hazardData']
     loc = json_data['locality']
     hazards = collection.find({'locality':loc})
-    for hazard in hazards:
-        print(hazard)
-    return hazards
+    json_d = dumps(list(hazards))
+    return json_d
 
 def search_hazard_by_city(json_data):
     db = client['project']
     collection = db['hazardData']
     city = json_data['city']
     hazards = collection.find({'city':city})
-    for hazard in hazards:
-        print(hazard)
-    return hazards
+    json_d = dumps(list(hazards))
+    return json_d
 
 def get_hazard_within_range(json_data):
     db = client['project']
@@ -275,7 +290,7 @@ def get_hazard_within_range(json_data):
     max_longitude = longitude + 0.15
     min_latitude = latitude - 0.15
     max_latitude = latitude + 0.15
-    print(min_longitude,max_longitude,min_latitude,max_latitude)
+    # print(min_longitude,max_longitude,min_latitude,max_latitude)
     query = {
         'location.coordinates.0': {
             '$gt': min_longitude,
@@ -287,9 +302,8 @@ def get_hazard_within_range(json_data):
         }
     }
     incidents = collection.find(query)
-    for inci in incidents:
-        print(inci)
-    return incidents
+    json_d = dumps(list(incidents))
+    return json_d
 
 def verify_hazard_incidents():
     db = client['project']
@@ -303,44 +317,12 @@ def verify_hazard_incidents():
         }
     }
     verified_hazard = collection.find(query)
-    return verified_hazard
+    json_d = dumps(list(verified_hazard))
+    return json_d
 
-
-### -------------------------------------------------------------------------------------------------------------------------------- ###
-
-if __name__ == '__main__':
-    # Define your JSON object
-    json_data = {
-        'type': 'murder',
-            'longitude':14.9875,
-            'latitude':20.6754,
-            'pincode':380060,
-            'city':'Ahmedabad',
-            'locality':'Science City',
-            'description': 'loot',
-            'upvotes':40,
-            'downvotes':30,
-            'date': '20/20/2020',
-            'is-verified': False,
-            'post-by-admin': False
-    }
-
-    # Open a file for writing
-    with open("json_data.json", "w") as outfile:
-        # Write the JSON object to the file
-        json.dump(json_data, outfile)
-
-    data = {
-        'locality': 'Science City'
-    }
-    with open("data.json", "w") as outfile:
-        # Write the JSON object to the file
-        json.dump(data, outfile)
-
-    coordinates = {
-        'longitude': 14.9875,
-        'latitude': 20.6754
-    }
-    with open("coordinates.json", "w") as outfile:
-        # Write the JSON object to the file
-        json.dump(coordinates, outfile)
+def feed_hazard_posts():
+    db = client['project']
+    collection = db['hazardData']
+    latest_entries = collection.find().sort('_id', -1).limit(20)
+    json_d = dumps(list(latest_entries))
+    return json_d
