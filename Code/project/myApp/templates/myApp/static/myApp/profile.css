@@ -9,6 +9,7 @@ body {
 
 
 body:before {
+    z-index: 0;
     content:"";
     position:fixed;
     left:0;
@@ -97,6 +98,7 @@ body:before {
 }
 
 #navbar{
+    z-index: 1;
     display: flex;
     align-items: center;
     position: sticky;
@@ -167,4 +169,8 @@ body:before {
     padding-top: 16px;
     padding-left: 16px;
     padding-right: 16px;
+}
+
+.container{
+    z-index: 0;
 }
