@@ -205,7 +205,7 @@ def PostIncident(request):
                 #print("Here2")
                 return HttpResponse("Post Failed")
         else:
-            return render(request, 'myApp/postIncident.html')
+            return render(request, 'myApp/postIncident.html', {'user': username})
     else:
         return redirect('/myApp/login/')
 
@@ -223,7 +223,7 @@ def PostProperty(request):
                 #print("Here2")
                 return HttpResponse("Post Failed")
         else:
-            return render(request, 'myApp/PostProperty.html')
+            return render(request, 'myApp/PostProperty.html', {'user': username})
     else:
         return redirect('/myApp/login/')
 
@@ -409,7 +409,7 @@ def IncidentFeed(request):
         posts = list(incident_collection.find())
         username = request.session.get('username')
         user = user_collection.find_one({"UserName": username})
-        #print(posts)
+        print(user)
         return render(request, 'myApp/IncidentFeed.html', {'posts': posts, 'user': user})
     else:
         return HttpResponse("Error")
