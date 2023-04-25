@@ -242,6 +242,7 @@ def profile(request):
     
 def editprofile(request):
     username = request.session.get('username')
+    print("here-----------------")
     if username is not None:
         if (request.method == 'POST'):
             print(request.POST)
