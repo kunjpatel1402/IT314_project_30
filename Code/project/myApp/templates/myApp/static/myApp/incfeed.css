@@ -183,3 +183,16 @@ h5{
 .details{
   text-align: center;
 }
+
+#search {
+  max-width: 20%;
+  position: fixed;
+  top: 17%;
+  left: 15px;
+}
+
+#srchbtn{
+  margin-left: 1%;
+  cursor: pointer;
+  border-radius: 10px;
+}
