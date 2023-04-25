@@ -127,12 +127,7 @@ body:before {
   color: grey;
 }
 
-.details {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 
-}
 
 .vote-buttons{
   margin-left: 0.8%;
@@ -171,4 +166,20 @@ body:before {
 
 hr{
     border: 1px solid grey;
+}
+
+.feeds {
+  margin: auto;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+h5{
+  text-align: center;
+}
+
+.details{
+  text-align: center;
 }
