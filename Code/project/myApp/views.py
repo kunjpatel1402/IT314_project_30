@@ -456,3 +456,16 @@ def SearchProperty(request):
             return HttpResponse("Error")
     else:
         return redirect('/myApp/login/')
+    
+def myPost(request):
+    username = request.session.get('username')
+    if username is not None:
+        if (request.method == 'GET'):
+            posts = incident_collection.find({'author': username})
+            posts = list(posts)
+            #print(posts)
+            return render(request, 'myApp/IncidentFeed.html', {'posts': posts})
+        else:
+            return HttpResponse("Error")
+    else:
+        return redirect('/myApp/login/')
