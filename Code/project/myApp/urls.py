@@ -17,5 +17,6 @@ urlpatterns = [
     path('upvote/<str:PostID>', views.Upvote, name='Upvote'),
     path('downvote/<str:PostID>', views.Downvote, name='Downvote'),
     path('IncidentFeed/', views.IncidentFeed, name='IncidentFeed'),
-    path('PropertyFeed/', views.PropertyFeed, name='PropertyFeed')
+    path('PropertyFeed/', views.PropertyFeed, name='PropertyFeed'),
+    path('searchIncident/', views.SearchIncident, name='SearchIncident'),
 ]

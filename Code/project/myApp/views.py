@@ -423,3 +423,19 @@ def PropertyFeed(request):
         return render(request, 'myApp/PropertyFeed.html', {'posts': posts, 'user': user})
     else:
         return HttpResponse("Error")
+    
+def SearchIncident(request):
+    username = request.session.get('username')
+    if username is not None:
+        if (request.method == 'POST'):
+            prompt = request.POST['prompt']
+            print("prompt: " + prompt)
+            posts = incident_collection.find({'$text': {'$search':prompt}},{ 'score': { '$meta': "textScore" } })
+            posts.sort([('score', {'$meta': 'textScore'})])
+            posts = list(posts)
+            print(posts)
+            return render(request, 'myApp/IncidentFeed.html', {'posts': posts})
+        else:
+            return HttpResponse("Error")
+    else:
+        return redirect('/myApp/login/')
