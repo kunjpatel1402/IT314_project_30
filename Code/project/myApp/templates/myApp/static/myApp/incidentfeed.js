@@ -1,5 +1,5 @@
-let user = '<%- JSON.stringify(user) %>';
-user = JSON.parse(user);
+// let user = '<%- JSON.stringify(user) %>';
+// user = JSON.parse(user);
 
 function color(status, id1) {
   let upbutton = document.getElementById("up/" + id1);
@@ -21,7 +21,7 @@ function color(status, id1) {
 function add_verified(votes) {
   let verified0 = document.getElementById("verified0");
   let verified1 = document.getElementById("verified1");
-  if (votes >= 2) {
+  if (votes >= 1) {
     if (verified0) {
       verified0.innerHTML = "";
       verified0.style.marginLeft = "0px";
