@@ -70,7 +70,12 @@
       </ul>
   </nav>
     {% endif %}
-    
+    <div class="input-group rounded" id="search">
+      <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+      <!-- <span class="input-group-text border-0" id="search-addon"> -->
+        <button class="fas fa-search" id="srchbtn"></button>
+      <!-- </span> -->
+    </div>
     <div class="feeds">
   {%for post in posts%}
   <div class="card" id="{{post.post_ID}}">
