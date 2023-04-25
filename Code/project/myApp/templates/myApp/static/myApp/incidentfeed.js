@@ -21,7 +21,7 @@ function color(status, id1) {
 function add_verified(votes) {
   let verified0 = document.getElementById("verified0");
   let verified1 = document.getElementById("verified1");
-  if (votes >= 100) {
+  if (votes >= 2) {
     if (verified0) {
       verified0.innerHTML = "";
       verified0.style.marginLeft = "0px";
