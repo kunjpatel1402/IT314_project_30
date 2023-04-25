@@ -120,9 +120,9 @@
       {% endif %}
       <span class="vote-count" id="vc/{{post.post_ID}}">{{post.upvotes|sub:post.downvotes}}</span>
       {% if post.upvotes|sub:post.downvotes >= 1%}
-      <span id="verified0">&#x2713;</span>
+      <span class="verified0" id="verified0/{{post.post_ID}}">&#x2713;</span>
       {% endif %}
-      <span id="verified1"></span>
+      <span class="verified1" id="verified1/{{post.post_ID}}"></span>
       {% endwith %}
     </div>
     {% endif %}
