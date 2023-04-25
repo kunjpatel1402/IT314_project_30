@@ -356,28 +356,53 @@ def Downvote(requests, PostID):
         return redirect('/myApp/login/')
 
 def Changepassword(request):
-    if request.method == 'POST':
-        form = ChangePasswordForm(request.POST)
-        if form.is_valid():
-            query = {"UserName": form.UserName}
-            user = user_collection.find_one(query)
-            if user is None:
-                error_message = "User does not exist"
-                return render(request, 'myApp/changePassword.html', {'error_message': error_message})
+    username = request.session.get('username')
+    if username is not None:
+        if request.method == 'POST':
+            form = ChangePasswordForm(request.POST)
+            if form.is_valid():
+                query = {"UserName": form.UserName}
+                user = user_collection.find_one(query)
+                if user is None:
+                    error_message = "User does not exist"
+                    return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'user':username})
+                else:
+                    if user['DOB'] != form.DOB:
+                        error_message = "Incorrect Date of Birth"
+                        return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'user':username})
+                    else:
+                        query = {"UserName": form.UserName}
+                        new_values = {"$set": {"Password": form.new_password}}
+                        user_collection.update_one(query, new_values)
+                        return redirect('/myApp/login/')
             else:
-                if user['DOB'] != form.DOB:
-                    error_message = "Incorrect Date of Birth"
+                error_message = "Passwords do not match"
+                return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'user':username})
+        else:
+            return render(request, 'myApp/changePassword.html',{'user':username})
+    else:
+        if request.method == 'POST':
+            form = ChangePasswordForm(request.POST)
+            if form.is_valid():
+                query = {"UserName": form.UserName}
+                user = user_collection.find_one(query)
+                if user is None:
+                    error_message = "User does not exist"
                     return render(request, 'myApp/changePassword.html', {'error_message': error_message})
                 else:
-                    query = {"UserName": form.UserName}
-                    new_values = {"$set": {"Password": form.new_password}}
-                    user_collection.update_one(query, new_values)
-                    return redirect('/myApp/login/')
+                    if user['DOB'] != form.DOB:
+                        error_message = "Incorrect Date of Birth"
+                        return render(request, 'myApp/changePassword.html', {'error_message': error_message})
+                    else:
+                        query = {"UserName": form.UserName}
+                        new_values = {"$set": {"Password": form.new_password}}
+                        user_collection.update_one(query, new_values)
+                        return redirect('/myApp/login/')
+            else:
+                error_message = "Passwords do not match"
+                return render(request, 'myApp/changePassword.html', {'error_message': error_message})
         else:
-            error_message = "Passwords do not match"
-            return render(request, 'myApp/changePassword.html', {'error_message': error_message})
-    else:
-        return render(request, 'myApp/changePassword.html')
+            return render(request, 'myApp/changePassword.html')
     
 def IncidentFeed(request):
     if (request.method == 'GET'):
