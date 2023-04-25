@@ -151,13 +151,13 @@ body:before {
   cursor: pointer;
 }
 
-#verified0{
+.verified0{
   color: lime;
   margin-left: 1%;
   font-size: 1.3rem;
   font-weight: bold;
 }
-#verified1 {
+.verified1 {
   color: lime;
   /* margin-left: 1%; */
   font-size: 1.3rem;
