@@ -17,8 +17,8 @@ class RegisterationForm():
         self.Password = data['Password']
         self.ConfirmPassword = data['ConfirmPassword']
         self.DOB = data['DOB']
-        self.upvoted = {"hello": True, "world": True}
-        self.downvoted = {"hello": True, "world": True}
+        self.UpVoted = {}
+        self.DownVoted = {}
     def is_valid(self):
         return True
     def to_dict(self):
@@ -29,10 +29,50 @@ class RegisterationForm():
             'Email': self.Email,
             'Password': self.Password,
             'DOB': self.DOB,
-            'upvoted': self.upvoted,
-            'downvoted': self.downvoted
+            'UpVoted': self.UpVoted,
+            'DownVoted': self.DownVoted
         }
     
+class EditDetailsForm():
+    def __init__(self, data):
+        self.FirstName = data['FirstName']
+        self.LastName = data['LastName']
+        self.Email = data['Email']
+        self.DOB = data['DOB']
+        self.AddressLine1 = data['AddressLine1']
+        self.AddressLine2 = data['AddressLine2']
+        self.Locality = data['Locality']
+        self.Pincode = int(data['Pincode'])
+        self.City = data['City']
+        self.State = data['State']
+        self.Country = data['Country']
+        self.Latitude = float(data['Latitude'])
+        self.Longitude = float(data['Longitude'])
+        self.Mobile = int(data['Mobile'])
+        self.Instagram = data['Instagram']
+        self.Twitter = data['Twitter']
+    def is_valid(self):
+        return True
+    def to_dict(self):
+        return {
+            'FirstName': self.FirstName,
+            'LastName': self.LastName,
+            'Email': self.Email,
+            'DOB': self.DOB,
+            'AddressLine1': self.AddressLine1,
+            'AddressLine2': self.AddressLine2,
+            'Locality': self.Locality,
+            'Pincode': self.Pincode,
+            'City': self.City,
+            'State': self.State,
+            'Country': self.Country,
+            'Latitude': self.Latitude,
+            'Longitude': self.Longitude,
+            'Mobile': self.Mobile,
+            'Instagram': self.Instagram,
+            'Twitter': self.Twitter
+        }
+
 class PostIncidentForm():
     def __init__(self, data, username):
         self.title = data['Title']
