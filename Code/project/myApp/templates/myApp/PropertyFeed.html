@@ -65,25 +65,26 @@
   </nav>
   {% endif %}
 
+  <div class="feeds">
   {%for post in posts%}
   <div class="card" id="{{post.post_ID}}">
     <div class="card-body">
       <div class="details">
-        <div>
+       
           <h5 class="card-title">{{post.title}}</h5>
-        </div>
-        <div>
-          <h5 class="card-title">{{post.time}}</h5>
-        </div>
-        <div>
-          <h5 class="card-title">{{post.score}}</h5>
-        </div>
-        <div>
-          <h5 class="card-title ">
-            <a href="/seeprofile/{{post.author}}">{{post.author}}</a>
-          </h5>
-        </div>
+      
       </div>
+        <div>
+          <h6 class="card-title">Property score: {{post.score}}</h6>
+        </div>
+        <div>
+          <h6 class="card-title ">
+            Posted by <a href="/seeprofile/{{post.author}}"> {{post.author}}</a>
+          </h6>
+        </div>
+     
+      <hr>
+      <p class="card-text"><b>Address: </b>{{post.address_line1}} , {{post.city}},{{post.state}},{{post.country}}</p>
       <p class="card-text">{{post.description}}</p>
     </div>
     <!-- <strong>{{post}}</strong>
@@ -91,6 +92,7 @@
       <strong>{{user.upvoted.hetav}}</strong> -->
   </div>
   {%endfor%}
+</div>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
     integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
     crossorigin="anonymous"></script>
