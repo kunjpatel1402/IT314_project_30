@@ -42,13 +42,13 @@ class EditDetailsForm():
         self.AddressLine1 = data['AddressLine1']
         self.AddressLine2 = data['AddressLine2']
         self.Locality = data['Locality']
-        self.Pincode = int(data['Pincode'])
+        self.Pincode = data['Pincode']
         self.City = data['City']
         self.State = data['State']
         self.Country = data['Country']
-        self.Latitude = float(data['Latitude'])
-        self.Longitude = float(data['Longitude'])
-        self.Mobile = int(data['Mobile'])
+        self.Latitude = data['Latitude']
+        self.Longitude = data['Longitude']
+        self.Mobile = data['Mobile']
         self.Instagram = data['Instagram']
         self.Twitter = data['Twitter']
     def is_valid(self):
