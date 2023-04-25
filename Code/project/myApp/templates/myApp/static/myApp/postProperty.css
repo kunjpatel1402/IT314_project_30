@@ -24,16 +24,16 @@ body {
 } */
 
 body:before {
-	content:"";
-	position:fixed;
-	left:0;
-	top:0;
-	right:0;
-	bottom:0;
-	z-index:-1;
-	display:block;
-	background:url(./black-map-bg-bg.jpg) no-repeat 50% 50%;
-	background-size:cover;
+    content: "";
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    display: block;
+    background: url(./black-map-bg-bg.jpg) no-repeat 50% 50%;
+    background-size: cover;
 }
 
 
@@ -44,6 +44,7 @@ body:before {
     padding: 40px 30px 30px 30px;
     background-color: #ecf0f3;
     border-radius: 15px;
+
 
 }
 
@@ -130,16 +131,16 @@ body:before {
 .container {
     display: flex;
     flex-direction: column;
-  }
-  
-  .row {
+}
+
+.row {
     display: flex;
     flex-direction: row;
-  }
-  
-  .column {
+}
+
+.column {
     flex: 1;
-  }
+}
 
 @media(max-width: 380px) {
     .wrapper {
@@ -148,38 +149,38 @@ body:before {
     }
 }
 
-  
-#navbar{
+
+#navbar {
     display: flex;
     align-items: center;
     position: sticky;
     top: 0px;
 }
 
-#navbar::before{
+#navbar::before {
     content: "";
     background-color: black;
     position: absolute;
-    top:0px;
-    left:0px;
+    top: 0px;
+    left: 0px;
     height: 100%;
-    width:100%;
+    width: 100%;
     z-index: -1;
     opacity: 0.75;
 }
 
-#logo{
+#logo {
     width: 870px;
 }
 
-#logo img{
+#logo img {
     height: 65px;
     width: 320px;
     filter: invert(100%);
     margin: 10px;
 }
 
-#navbar ul{
+#navbar ul {
     list-style: none;
     display: flex;
     flex-direction: row;
@@ -188,62 +189,62 @@ body:before {
     width: 100%;
 }
 
-#navbar li{
+#navbar li {
     color: white;
 }
 
-#navbar li a{
+#navbar li a {
     color: grey;
     font-size: 1.2rem;
     font-family: 'Comfortaa', cursive;
     text-decoration: none;
 }
 
-#navbar li a:hover{
+#navbar li a:hover {
     color: white;
     text-decoration: underline;
 }
 
-#navbar li span{
+#navbar li span {
     display: block;
 }
 
-#home{
+#home {
     text-align: center;
 }
 
-#profile{
+#profile {
     text-align: center;
 }
 
-.padtop{
+.padtop {
     padding-top: 16px;
     padding-left: 16px;
     padding-right: 16px;
 }
 
 .wrapper .form-field button {
-   
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  background-color: grey;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background-color: grey;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
 }
 
-.wrapper .form-field  button:hover {
-  background-color: #010204;
+.wrapper .form-field button:hover {
+    background-color: #010204;
 }
 
 #map {
-  width: 100%; 
-  height: 300px;
-  border-radius: 10px;
+    width: 100%;
+    height: 300px;
+    border-radius: 10px;
 
 }
 
-#err{
+#err {
     color: red;
 }
