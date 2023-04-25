@@ -152,6 +152,7 @@ body:before {
 
 #navbar {
     display: flex;
+    z-index:1; /*Add this*/
     align-items: center;
     position: sticky;
     top: 0px;
