@@ -259,15 +259,6 @@ def editprofile(request):
         return redirect('/myApp/login/')
 
 
-def SeePosts(request, PostID):
-    username = request.session.get('username')
-    if username is not None:
-        if request.method == 'GET':
-            post = incident_collection.find_one({"post_ID": PostID})
-            author = user_collection.find_one({"UserName": post['author']})
-            return render(request, 'myApp/SeePosts.html', {'post': post, 'author': author})
-    else:
-        return redirect('/myApp/login/')
 
 
 def SeeProfiles(request, ProfileID):
