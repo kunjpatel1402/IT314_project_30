@@ -23,12 +23,15 @@
   <body>
     <nav id="navbar">
       <div id="logo">
-        <a href="/reg_hmpg"><img src="/logo.png" alt="" /></a>
+        <a href="/reg_hmpg">
+          {% load static %}
+          <img src="{%static 'myApp/logo.png'%}" alt="" />
+        </a>
       </div>
       <ul>
-        <li class="padtop"><a href="/postincident">Post Incident</a></li>
+        <li class="padtop"><a href="/myApp/postIncident">Post Incident</a></li>
         <li class="padtop"><a href="#">Post Property</a></li>
-        <li class="padtop"><a href="/incidentfeed_auth">Incident Feed</a></li>
+        <li class="padtop"><a href="/incidentfeed">Incident Feed</a></li>
         <li class="padtop"><a href="#">Property Feed</a></li>
         <li class="padtop"><a href="/logout">Logout</a></li>
         <li>
@@ -62,6 +65,7 @@
       <!-- <strong>{{post}}</strong>
       <strong>{{user}}</strong>
       <strong>{{user.upvoted.hetav}}</strong> -->
+      {% if user != None%}
       <div class="vote-buttons">
         {% if user.upvoted.post.post_ID == True %}
         <button
@@ -107,6 +111,7 @@
         {% endif %}
         <span id="verified1"></span>
       </div>
+      {% endif %}
     </div>
     {%endfor%}
     <script

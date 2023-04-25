@@ -244,6 +244,7 @@ def editprofile(request):
     username = request.session.get('username')
     if username is not None:
         if (request.method == 'POST'):
+            print(request.POST)
             form = EditDetailsForm(request.POST)
             if form.is_valid():
                 user_collection.update_one({"UserName": username}, {"$set": form.to_dict()})
@@ -389,7 +390,7 @@ def IncidentFeed(request):
     
 def PropertyFeed(request):
     if (request.method == 'GET'):
-        posts = property_collection.find()
+        posts = property_collection.find().sort("score", 1)
         #print(posts)
         username = request.session.get('username')
         user = user_collection.find_one({"UserName": username})
