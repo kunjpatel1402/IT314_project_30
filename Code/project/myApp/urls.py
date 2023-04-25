@@ -10,6 +10,7 @@ urlpatterns = [
     path('postIncident/', views.PostIncident, name='PostIncident'),
     path('postProperty/', views.PostProperty, name='PostProperty'),
     path('profile/', views.profile, name='profile'),
+    path('editprofile/', views.editprofile, name='editprofile'),
     path('seepost/<str:PostID>', views.SeePosts, name='SeePosts'),
     path('seeprofile/<str:ProfileID>', views.SeeProfiles, name='SeeProfiles'),
     path('changePassword/', views.Changepassword, name='Changepassword'),

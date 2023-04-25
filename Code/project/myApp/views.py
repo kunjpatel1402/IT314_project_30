@@ -7,6 +7,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from .forms import LoginForm, RegisterationForm, PostIncidentForm, PostPropertyForm, ChangePasswordForm
 from django.http import JsonResponse
+from .forms import LoginForm, RegisterationForm, PostIncidentForm, PostPropertyForm, ChangePasswordForm , EditDetailsForm
 #from apscheduler.schedulers.background import BackgroundScheduler
 import pymongo
 import math
@@ -236,6 +237,22 @@ def profile(request):
         user = user_collection.find_one({"UserName": username})
         #print(user)
         return render(request, 'myApp/profile.html', {'user': user})
+    else:
+        return redirect('/myApp/login/')
+    
+def editprofile(request):
+    username = request.session.get('username')
+    if username is not None:
+        if (request.method == 'POST'):
+            form = EditDetailsForm(request.POST)
+            if form.is_valid():
+                user_collection.update_one({"UserName": username}, {"$set": form.to_dict()})
+                return redirect('/myApp/profile/')
+            else:
+                return HttpResponse("Profile Update Failed")
+        else:
+            user = user_collection.find_one({"UserName": username})
+            return render(request, 'myApp/EditDetails.html', {'user': user})
     else:
         return redirect('/myApp/login/')
 
