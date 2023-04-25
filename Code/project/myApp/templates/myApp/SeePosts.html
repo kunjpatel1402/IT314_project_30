@@ -9,9 +9,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{post.title}}</title>
   <link rel="stylesheet" href="./myApp/seepost.css">
-</head>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css"    integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ti-icons@0.1.2/css/themify-icons.css">
+  
+  </head>
+  <body>
+    {% if user != None%}
+    <nav id="navbar">
+        <div id="logo">
+            <a href="#"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
+        </div>
+        <ul>
+            <li class="padtop">
+                <div id="home">
+                    <a href="/myApp/">
+                        <span class="fas fa-home"></span>
+                        Home
+                    </a>
+                </div>
+            </li>
+            <li class="padtop"><a href="/myApp/postIncident/">Post Incident</a></li>
+            <li class="padtop"><a href="/myApp/postProperty/">Post Property</a></li>
+            <li class="padtop"><a href="/myApp/IncidentFeed">Incident Feed</a></li>
+            <li class="padtop"><a href="/myApp/PropertyFeed">Property Feed</a></li>
+            <li class="padtop"><a href="/myApp/logout">Sign Out</a></li>
+            <li class="padtop">
+                <div id="profile">
+                    <a href="/myApp/profile/">
+                        <span class="far fa-user"></span>
+                        Profile
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    {% else %}
+    <nav id="navbar">
+        <div id="logo">
+            <a href="#"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
+        </div>
+        <ul>
+            <li class="padtop">
+                <div id="home">
+                    <a href="/myApp/">
+                        <span class="fas fa-home"></span>
+                        Home
+                    </a>
+                </div>
+            </li>
+            <li class="padtop"><a href="/myApp/IncidentFeed">Incident Feed</a></li>
+            <li class="padtop"><a href="/myApp/PropertyFeed">Property Feed</a></li>
+            <li class="padtop"><a href="/myApp/login">Sign In/Register</a></li>
+        </ul>
+    </nav>
+    {%endif%}
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-7 col-lg-4 mb-5 mb-lg-0 wow fadeIn">
@@ -56,6 +108,7 @@
         </div>
     </div>
 </div>
-<body>
+
+  
 </body>
 </html>
