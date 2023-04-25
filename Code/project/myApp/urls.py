@@ -19,4 +19,5 @@ urlpatterns = [
     path('IncidentFeed/', views.IncidentFeed, name='IncidentFeed'),
     path('PropertyFeed/', views.PropertyFeed, name='PropertyFeed'),
     path('searchIncident/', views.SearchIncident, name='SearchIncident'),
+    path('searchProperty/', views.SearchProperty, name='SearchProperty'),
 ]
