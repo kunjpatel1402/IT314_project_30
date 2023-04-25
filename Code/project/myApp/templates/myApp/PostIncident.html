@@ -54,6 +54,7 @@
       Post an Incident
     </div>
     <form class="p-3 mt-3" action="/myApp/postIncident/" method="post">
+      {% csrf_token %}
       <div class="form-field d-flex align-items-center">
         <span class="far fa-user"></span>
         <input type="text" name="Title" placeholder="Title" required />
@@ -102,7 +103,7 @@
           <input type="radio" name="crime-or-hazard" value="hazard" onclick="showOptions()"> Hazard
         </div>
         <div>
-          <select class="btn" id="dropdown"></select>
+          <select class="btn" id="dropdown" name = "IncidentType"></select>
         </div>
       </div>
       <button class="btn mt-3">Post Incident</button>

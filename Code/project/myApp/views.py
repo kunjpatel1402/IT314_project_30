@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from .forms import LoginForm, RegisterationForm, PostIncidentForm, PostPropertyForm, ChangePasswordForm
+from django.http import JsonResponse
 #from apscheduler.schedulers.background import BackgroundScheduler
 import pymongo
 import math
@@ -193,12 +194,12 @@ def PostIncident(request):
     username = request.session.get('username')
     #print(username)
     if username is not None:
-        if (request.method == 'POST'):
-            #print(request.POST)
+        if (request.method == 'POST'):  
+            print(request.POST)
             form = PostIncidentForm(request.POST, username)
             if form.is_valid():
                 incident_collection.insert_one(form.to_dict())
-                return HttpResponse("Post Successful")
+                return redirect('/myApp')
             else:
                 #print("Here2")
                 return HttpResponse("Post Failed")
@@ -272,6 +273,7 @@ def Upvote(request, PostID):
             myuser = user_collection.find_one({"UserName": username})
             #print("here\n\n\n")
             #print(myuser)
+            curr = post['upvotes'] - post['downvotes']
             downvoted = myuser['downvoted']
             upvoted = myuser['upvoted']
             #print(downvoted)
@@ -284,7 +286,7 @@ def Upvote(request, PostID):
                 upvoted.pop(PostID)
                 new_values = {"$set": {"upvoted": upvoted}}
                 user_collection.update_one({"UserName": username}, new_values)
-                return HttpResponse(status = 201)
+                return JsonResponse({"status": "neutral", "votes": curr-1})
             else:
                 #print("upvoting")
                 new_values = {"$set": {"upvotes": post['upvotes'] + 1}}
@@ -292,7 +294,7 @@ def Upvote(request, PostID):
                 upvoted[PostID] = True
                 new_values = {"$set": {"upvoted": upvoted}}
                 user_collection.update_one({"UserName": username}, new_values)
-                return HttpResponse(status = 200)
+                return JsonResponse({"status": "upvoted", "votes": curr+1})
     else:
         return redirect('/myApp/login/')
 
@@ -309,10 +311,10 @@ def Downvote(requests, PostID):
     username = requests.session.get('username')
     if username is not None:
         if (requests.method == 'GET'):
-
+            query = {"post_ID": PostID}
             post = find_post(PostID)
+            curr = post['upvotes'] - post['downvotes']
             myuser = find_user(username)
-
             downvoted = myuser['downvoted']
             upvoted = myuser['upvoted']
             if (post is None) or (upvoted.get(PostID) != None):
@@ -320,17 +322,17 @@ def Downvote(requests, PostID):
             elif downvoted.get(PostID) != None:
                 new_values = {"$set": {"downvotes": post['downvotes'] - 1}}
                 incident_collection.update_one(query, new_values)
-                downvoted = downvoted.pop(PostID)
+                downvoted.pop(PostID)
                 new_values = {"$set": {"downvoted": downvoted}}
                 user_collection.update_one({"UserName": username}, new_values)
-                return HttpResponse(status = 201)
+                return JsonResponse({"status": "neutral", "votes": curr+1})
             else:
                 new_values = {"$set": {"downvotes": post['downvotes'] + 1}}
                 incident_collection.update_one(query, new_values)
                 downvoted[PostID] = True
                 new_values = {"$set": {"downvoted": downvoted}}
                 user_collection.update_one({"UserName": username}, new_values)
-                return HttpResponse(status = 200)
+                return JsonResponse({"status": "downvoted", "votes": curr-1})
     else:
         return redirect('/myApp/login/')
 

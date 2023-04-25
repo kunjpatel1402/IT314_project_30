@@ -14,7 +14,9 @@
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
     />
-    <link rel="stylesheet" href="/incidentfeed_auth.css" />
+    {% load myApp_extras%}
+    {% load static %}
+    <link rel="stylesheet" href="{%static 'myApp/incfeed.css'%}" />
     <title>Incident Feed</title>
   </head>
 
@@ -39,10 +41,8 @@
         </li>
       </ul>
     </nav>
-    {% if(posts.length> 0) %} {%for post in posts%}
-
-    <div class="card" id="<%" ="incident._id%">
-      >
+    {%for post in posts%}
+    <div class="card" id="{{post.post_ID}}">
       <div class="card-body">
         <div class="details">
           <div>
@@ -52,62 +52,63 @@
             <h5 class="card-title">{{post.time}}</h5>
           </div>
           <div>
-            <h5 class="card-title <%= incident.author%>">
-              <a href="/{{<post.author}}">Author</a>
+            <h5 class="card-title ">
+              <a href="/seeprofile/{{post.author}}">{{post.author}}</a>
             </h5>
           </div>
         </div>
         <p class="card-text">{{post.description}}</p>
       </div>
+      <!-- <strong>{{post}}</strong>
+      <strong>{{user}}</strong>
+      <strong>{{user.upvoted.hetav}}</strong> -->
       <div class="vote-buttons">
-        {% if(user.upvotes.indexOf(incident._id)!=-1 ) {%}
+        {% if user.upvoted.post.post_ID == True %}
         <button
           class="upvote-button"
-          id="up/{{post._id%>}}"
+          id="up/{{post.post_ID}}"
           onClick="upclick(this.id)"
           style="color: lime"
         >
           &#x25B2;
         </button>
-        {%} else {%}
+        {% else %}
         <button
           class="upvote-button"
-          id="up/{{post._id}}"
+          id="up/{{post.post_ID}}"
           onClick="upclick(this.id)"
         >
           &#x25B2;
+        {% endif %}
         </button>
-        {%}%} {% if(user.downvotes.indexOf( post._id )!=-1 ) { %}
+        {% if user.downvotes.post.post_ID == True %}
         <button
           class="downvote-button"
-          id="down/{{post._id}}"
+          id="down/{{post.post_ID}}"
           onClick="downclick(this.id)"
           style="color: red"
         >
           &#x25BC;
         </button>
-        {%} else {%}
+        {% else %}
         <button
           class="downvote-button"
-          id="down/{{postt._id}}"
+          id="down/{{post.post_ID}}"
           onClick="downclick(this.id)"
         >
           &#x25BC;
         </button>
-        {%}%}
-        <!-- <button class="downvote-button" id ="down/<%= incident._id%>" onClick="downclick(this.id)">&#x25BC;</button> -->
-        <span class="vote-count" id="vc/{{post._id}}"
-          >Votes : {{post.votes}}</span
+        {% endif %}
+        <span class="vote-count" id="vc/{{post.post_ID}}"
+          >{{post.upvotes|sub:post.downvotes}}</span
         >
-        {%if(post.isverified) {%}
+        {% if post.upvotes|sub:post.downvotes >= 1%}
         <span id="verified0">&#x2713;</span>
-        {%}%}
+        {% endif %}
         <span id="verified1"></span>
       </div>
     </div>
-
-    {%})%} {%}%}
-
+    {%endfor%}
     <script
       src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
       integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
@@ -123,6 +124,7 @@
       integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
       crossorigin="anonymous"
     ></script>
-    <script src="./script.js"></script>
+    {% load static %}
+    <script src="{%static 'myApp/incidentfeed.js'%}"></script>
   </body>
 </html>

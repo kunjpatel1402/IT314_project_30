@@ -46,12 +46,12 @@ let verified = document.getElementById("verified");
 function upclick(id) {
   const id1 = id.split("/")[1];
   console.log("clicked");
-  fetch('/upvote', {
-    method: 'POST',
+  fetch('/myApp/upvote/' + id1, {
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ id1, userid: user._id }),
+    }
+    // body: JSON.stringify({ id1, userid: user._id }),
   })
     .then((res) => res.json())
     .then((data) => {
@@ -67,15 +67,17 @@ function upclick(id) {
 
 function downclick(id) {
   const id1 = id.split("/")[1];
-  fetch('/downvote', {
-    method: 'POST',
+  console.log(id1);
+  fetch('/myApp/downvote/' + id1, {
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ id1, userid: user._id }),
+    }
+    // body: JSON.stringify({ id1, userid: user._id }),
   })
     .then((res) => res.json())
     .then((data) => {
+      console.log(data);
       const voteCount = document.getElementById("vc/" + id1);
       voteCount.innerHTML = "Votes : " + (data.votes);
       color(data.status, id1)
