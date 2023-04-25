@@ -21,7 +21,6 @@
   </head>
 
   <body>
-    {% if user != None%}
     <nav id="navbar">
         <div id="logo">
             <a href="#"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
@@ -50,26 +49,6 @@
             </li>
         </ul>
     </nav>
-    {% else %}
-    <nav id="navbar">
-        <div id="logo">
-            <a href="#"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
-        </div>
-        <ul>
-            <li class="padtop">
-                <div id="home">
-                    <a href="/myApp/">
-                        <span class="fas fa-home"></span>
-                        Home
-                    </a>
-                </div>
-            </li>
-            <li class="padtop"><a href="/myApp/IncidentFeed">Incident Feed</a></li>
-            <li class="padtop"><a href="/myApp/PropertyFeed">Property Feed</a></li>
-            <li class="padtop"><a href="/myApp/login">Sign In/Register</a></li>
-        </ul>
-    </nav>
-    {%endif%}
     {%for post in posts%}
     <div class="card" id="{{post.post_ID}}">
       <div class="card-body">
