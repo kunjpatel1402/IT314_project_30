@@ -13,6 +13,55 @@
 </head>
 
 <body>
+  {% if user != None%}
+    <nav id="navbar">
+        <div id="logo">
+            <a href="#"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
+        </div>
+        <ul>
+            <li class="padtop">
+                <div id="home">
+                    <a href="/myApp/">
+                        <span class="fas fa-home"></span>
+                        Home
+                    </a>
+                </div>
+            </li>
+            <li class="padtop"><a href="/myApp/postIncident/">Post Incident</a></li>
+            <li class="padtop"><a href="/myApp/postProperty/">Post Property</a></li>
+            <li class="padtop"><a href="/myApp/IncidentFeed">Incident Feed</a></li>
+            <li class="padtop"><a href="/myApp/PropertyFeed">Property Feed</a></li>
+            <li class="padtop"><a href="/myApp/logout">Sign Out</a></li>
+            <li class="padtop">
+                <div id="profile">
+                    <a href="/myApp/profile/">
+                        <span class="far fa-user"></span>
+                        Profile
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    {% else %}
+    <nav id="navbar">
+        <div id="logo">
+            <a href="#"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
+        </div>
+        <ul>
+            <li class="padtop">
+                <div id="home">
+                    <a href="/myApp/">
+                        <span class="fas fa-home"></span>
+                        Home
+                    </a>
+                </div>
+            </li>
+            <li class="padtop"><a href="/myApp/IncidentFeed">Incident Feed</a></li>
+            <li class="padtop"><a href="/myApp/PropertyFeed">Property Feed</a></li>
+            <li class="padtop"><a href="/myApp/login">Sign In/Register</a></li>
+        </ul>
+    </nav>
+    {%endif%}
   <header id="header">
     <h1>Incident Feed</h1>
     <div class="container">
