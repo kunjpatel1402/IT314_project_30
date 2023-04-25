@@ -26,6 +26,7 @@ for i in range(100):
         'Longitude': random.uniform(-180, 180),
         'Latitude': random.uniform(-90, 90),
         'Time': datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+        'IncidentType': 'Fire'
     }, (''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(10)))) 
     incident_collection.insert_one(incident.to_dict())
     property = PostPropertyForm({

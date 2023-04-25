@@ -29,9 +29,9 @@ property_collection = db["properties"]
 def index(request):
     username = request.session.get('username')
     if username is not None:
-        return render(request, 'myApp/reg_hmpg.html')
+        return render(request, 'myApp/reg_hmpg.html', {'user': username})
     else:
-        return render(request, 'myApp/unreg_hmpg.html')
+        return render(request, 'myApp/unreg_hmpg.html', {'user': None})
 
 
 def login(request):

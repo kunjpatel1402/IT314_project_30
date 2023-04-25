@@ -124,7 +124,7 @@ class PostIncidentForm():
         self.is_authentic = False
         self.upvotes = 0
         self.downvotes = 0
-        self.post_ID = username + datetime.now().strftime("%m:%d:%Y:%H:%M:%S")
+        self.post_ID = username + datetime.now().strftime("%m%d%Y%H%M%S")
     def is_valid(self):
         return True
     def to_dict(self):
@@ -156,7 +156,7 @@ class PostPropertyForm():
         self.country = data['Country']
         self.address_line1 = data['AddressLine1']
         self.address_line2 = data['AddressLine2']
-        self.post_ID = username + datetime.now().strftime("%m:%d:%Y:%H:%M:%S")
+        self.post_ID = username + datetime.now().strftime("%m%d%Y%H%M%S")
     def is_valid(self):
         return True
     def to_dict(self):
