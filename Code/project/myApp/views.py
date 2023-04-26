@@ -10,12 +10,9 @@ from django.http import JsonResponse
 from .forms import LoginForm, RegisterationForm, PostIncidentForm, PostPropertyForm, ChangePasswordForm , EditDetailsForm
 #from apscheduler.schedulers.background import BackgroundScheduler
 import pymongo
-from django.test import Client
 import math
 import sys, os
-# import datetime
 from datetime import datetime
-from subprocess import Popen, PIPE
 from threading import Thread
 
 client = pymongo.MongoClient("mongodb+srv://superuser:superuser%40SWE30@swe-cluster.xxvswrz.mongodb.net/?retryWrites=true&w=majority")
@@ -29,15 +26,15 @@ user_collection = db["users"]
 incident_collection = db["incident"]
 property_collection = db["properties"]
 
+
 def index(request):
     username = request.session.get('username')
     Thread(target=hourly_function).start()
-    # response = Client().post('/appforcelery/')   
-    # print(response)
     if username is not None:
         return render(request, 'myApp/reg_hmpg.html', {'user': username})
     else:
         return render(request, 'myApp/unreg_hmpg.html', {'user': None})
+
 
 def login(request):
     if request.method == 'POST':
@@ -95,6 +92,7 @@ def logout(request):
     request.session.flush()
     return redirect('/myApp')
 
+
 def calc_distance(lat1, long1, lat2, long2):
     R = 6371  # Earth's radius in kilometers
     lat1, long1, lat2, long2 = map(math.radians, [lat1, long1, lat2, long2])
@@ -105,8 +103,8 @@ def calc_distance(lat1, long1, lat2, long2):
     d = R * c
     return d
 
-
 def hourly_function():
+    print("started hourly function---------------------------------------\n\n\n")
     #This function will retrieve all the incidents present till current time
     #Also all properties present till the current time
     #It will create two dictionaries 'INC' and 'PROP', where all the respective data is stored
@@ -147,9 +145,11 @@ def hourly_function():
     #     property_list.append(property_data)
     #print(property_list, file=open('property_list.txt', 'w'))
     calculate_score(property_list, incident_list)
+    print("Ended hourly function---------------------------------------\n\n\n")
 
 
 def calculate_score(property_list, incident_list):
+    print("calculate score started--------------------------------\n\n\n")
     #The function is based on following formula:
     # (SIGMA(Ci * exp(-k1 * ti) * exp(-k2 * di))) / SIGMA(Ci * exp(-k1 * ti)) * 100
     # di = distance difference
@@ -202,12 +202,10 @@ def calculate_score(property_list, incident_list):
         property_list[i]['score'] = ((i+1.0)/length)*100
     for property_data in property_list:
         property_collection.update_one({'post_ID': property_data['post_ID']}, {'$set': {'score': property_data['score']}})
+    print("calculate score ended--------------------------------\n\n\n")
 
 
 
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(hourly_function(), 'interval', hours=1)
-# scheduler.start()
 
 
 

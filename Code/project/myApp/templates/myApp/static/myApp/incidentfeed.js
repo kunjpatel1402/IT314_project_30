@@ -18,16 +18,16 @@ function color(status, id1) {
   }
 }
 
-function add_verified(votes) {
-  let verified0 = document.getElementById("verified0");
-  let verified1 = document.getElementById("verified1");
+function add_verified(votes,id1) {
+  let verified0 = document.getElementById("verified0/"+id1);
+  let verified1 = document.getElementById("verified1/"+id1);
   if (votes >= 1) {
     if (verified0) {
       verified0.innerHTML = "";
       verified0.style.marginLeft = "0px";
     }
     verified1.style.marginLeft = "1%";
-    verified1.innerHTML = "&#x2713;";
+    verified1.innerHTML = "&check;";
   }
   else {
     if (verified0) {
@@ -56,9 +56,9 @@ function upclick(id) {
     .then((res) => res.json())
     .then((data) => {
       const voteCount = document.getElementById("vc/" + id1);
-      voteCount.innerHTML = "Votes : " + (data.votes);
+      voteCount.innerHTML = (data.votes);
       color(data.status, id1)
-      add_verified(data.votes);
+      add_verified(data.votes,id1);
     })
     .catch((err) => {
       console.error(err);
@@ -79,9 +79,9 @@ function downclick(id) {
     .then((data) => {
       console.log(data);
       const voteCount = document.getElementById("vc/" + id1);
-      voteCount.innerHTML = "Votes : " + (data.votes);
+      voteCount.innerHTML =(data.votes);
       color(data.status, id1)
-      add_verified(data.votes);
+      add_verified(data.votes,id1);
     })
     .catch((err) => {
       console.error(err);

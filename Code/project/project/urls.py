@@ -20,6 +20,4 @@ from django.urls.conf import include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('myApp/', include('myApp.urls')),
-    path('appforcelery/', include('appforcelery.urls'))
-    # path('appforcelery/', include('appforcelery.urls')),
 ]

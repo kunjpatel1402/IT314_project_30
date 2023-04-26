@@ -1,10 +1,8 @@
 from django.urls import path
-from django.conf.urls import include
-from django.contrib import admin
-from . import views
-from appforcelery import views as celery_views
 
-urlpatterns = [    
+from . import views
+
+urlpatterns = [
     path('', views.index, name='index'),
     path('login/', views.login, name='login'),
     path('logout/', views.logout, name='logout'),
@@ -22,9 +20,4 @@ urlpatterns = [
     path('searchIncident/', views.SearchIncident, name='SearchIncident'),
     path('searchProperty/', views.SearchProperty, name='SearchProperty'),
     path('myPosts/', views.myPost, name='myPost'),
-    
-    # path for celery
-    path('appforcelery', include('appforcelery.urls')),
-    path('', celery_views.testcelery, name='testcelery')
-
 ]

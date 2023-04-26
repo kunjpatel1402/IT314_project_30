@@ -38,9 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_celery_beat', #added
-    'appforcelery', #added
-    'django_celery_results', #added
     'myApp'
 ]
 
@@ -166,21 +163,3 @@ LOGGING = {
 
 # Disable logging of some specific messages
 logging.getLogger('django.server').setLevel(logging.ERROR)
-
-
-
-# CELERY SETTINGS
-# CELERY_BROKER_URL = 'mongodb://localhost:27017/'
-
-CELERY_BROKER_URL = 'rediss://red-ch4envss3fvjtic960fg:XvfzOA7YB5RNpI5qz5pkB4y9AzAcc5F1@singapore-redis.render.com:6379'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TASK_SERIALIZER = 'json'
-
-CELERY_RESULT_BACKEND = 'django-db'
-
-
-# CELERY BEAT SETTINGS
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
-
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']
