@@ -24,7 +24,7 @@
   {% if user is not None %}
   <nav id="navbar">
     <div id="logo">
-      <a href="#"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
+      <a href="/myApp/"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
     </div>
     <ul>
       <li class="padtop">
@@ -59,7 +59,7 @@
       <a class="dropdown-item" href="/myApp/postProperty/">Post Property</a></a>
       <a class="dropdown-item" href="/myApp/IncidentFeed">Incident Feed</a>
       <a class="dropdown-item" href="/myApp/PropertyFeed">Property Feed</a>
-      <a class="dropdown-item" href="/myApp/profile/">  <span class="far fa-user"></span> Profile</a>
+      <a class="dropdown-item" href="/myApp/profile/"> <span class="far fa-user"></span> Profile</a>
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="/myApp/logout">Sign Out</a>
     </div>
@@ -68,7 +68,7 @@
   {% else %}
   <nav id="navbar">
     <div id="logo">
-      <a href="#"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
+      <a href="/myApp/"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
     </div>
     <ul>
       <li class="padtop">
