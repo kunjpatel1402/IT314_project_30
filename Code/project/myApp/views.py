@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from .forms import LoginForm, RegisterationForm, PostIncidentForm, PostPropertyForm, ChangePasswordForm
+from django.http import JsonResponse
+from .forms import LoginForm, RegisterationForm, PostIncidentForm, PostPropertyForm, ChangePasswordForm , EditDetailsForm
 #from apscheduler.schedulers.background import BackgroundScheduler
 import pymongo
 from django.test import Client
@@ -33,9 +35,9 @@ def index(request):
     # response = Client().post('/appforcelery/')   
     # print(response)
     if username is not None:
-        return render(request, 'myApp/reg_hmpg.html')
+        return render(request, 'myApp/reg_hmpg.html', {'user': username})
     else:
-        return render(request, 'myApp/unreg_hmpg.html')
+        return render(request, 'myApp/unreg_hmpg.html', {'user': None})
 
 def login(request):
     if request.method == 'POST':
@@ -237,7 +239,7 @@ def PostProperty(request):
             form = PostPropertyForm(request.POST, username)
             if form.is_valid():
                 property_collection.insert_one(form.to_dict())
-                return HttpResponse("Post Successful")
+                return redirect('/myApp')
             else:
                 #print("Here2")
                 return HttpResponse("Post Failed")

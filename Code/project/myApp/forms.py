@@ -17,8 +17,8 @@ class RegisterationForm():
         self.Password = data['Password']
         self.ConfirmPassword = data['ConfirmPassword']
         self.DOB = data['DOB']
-        self.upvoted = {"hello": True, "world": True}
-        self.downvoted = {"hello": True, "world": True}
+        self.UpVoted = {}
+        self.DownVoted = {}
     def is_valid(self):
         return True
     def to_dict(self):
@@ -29,10 +29,50 @@ class RegisterationForm():
             'Email': self.Email,
             'Password': self.Password,
             'DOB': self.DOB,
-            'upvoted': self.upvoted,
-            'downvoted': self.downvoted
+            'UpVoted': self.UpVoted,
+            'DownVoted': self.DownVoted
         }
     
+class EditDetailsForm():
+    def __init__(self, data):
+        self.FirstName = data['FirstName']
+        self.LastName = data['LastName']
+        self.Email = data['Email']
+        self.DOB = data['DOB']
+        self.AddressLine1 = data['AddressLine1']
+        self.AddressLine2 = data['AddressLine2']
+        self.Locality = data['Locality']
+        self.Pincode = data['Pincode']
+        self.City = data['City']
+        self.State = data['State']
+        self.Country = data['Country']
+        self.Latitude = data['Latitude']
+        self.Longitude = data['Longitude']
+        self.Mobile = data['Mobile']
+        self.Instagram = data['Instagram']
+        self.Twitter = data['Twitter']
+    def is_valid(self):
+        return True
+    def to_dict(self):
+        return {
+            'FirstName': self.FirstName,
+            'LastName': self.LastName,
+            'Email': self.Email,
+            'DOB': self.DOB,
+            'AddressLine1': self.AddressLine1,
+            'AddressLine2': self.AddressLine2,
+            'Locality': self.Locality,
+            'Pincode': self.Pincode,
+            'City': self.City,
+            'State': self.State,
+            'Country': self.Country,
+            'Latitude': self.Latitude,
+            'Longitude': self.Longitude,
+            'Mobile': self.Mobile,
+            'Instagram': self.Instagram,
+            'Twitter': self.Twitter
+        }
+
 class PostIncidentForm():
     def __init__(self, data, username):
         self.title = data['Title']
@@ -40,12 +80,51 @@ class PostIncidentForm():
         self.longitude = float(data['Longitude'])
         self.latitude = float(data['Latitude'])
         self.author = username
-        self.incident_type = 0
+        if (data['IncidentType'] == 'Fire'):
+            self.incident_type = 1
+        elif (data['IncidentType'] == 'Flood'):
+            self.incident_type = 2
+        elif (data['IncidentType'] == 'Earthquake'):
+            self.incident_type = 3
+        elif (data['IncidentType'] == 'Landslide'):
+            self.incident_type = 4
+        elif (data['IncidentType'] == 'Tsunami'):
+            self.incident_type = 5
+        elif (data['IncidentType'] == 'Virus and Bacteria'):
+            self.incident_type = 6
+        elif (data['IncidentType'] == 'Cyclone'):
+            self.incident_type = 7
+        elif (data['IncidentType']=='Drought'):
+            self.incident_type = 8
+        elif (data['IncidentType']=='Forest Fire'):
+            self.incident_type = 9
+        elif (data["IncidentType"]=='Industrial Accident'):
+            self.incident_type = 10
+        elif (data['IncidentType']=='Tax Fraud'):
+            self.incident_type = 11
+        elif (data['IncidentType']=='Money Laundering'):
+            self.incident_type = 12
+        elif (data['IncidentType']=='Theft'):
+            self.incident_type = 13
+        elif (data['IncidentType']=='Smuggling'):
+            self.incident_type = 14
+        elif (data['IncidentType']=='CyberCrime'):
+            self.incident_type = 15
+        elif (data['IncidentType']=='Bribe'):
+            self.incident_type = 16
+        elif (data['IncidentType']=='Hit and Run'):
+            self.incident_type = 17
+        elif (data['IncidentType']=='Kidnap'):
+            self.incident_type = 18
+        elif (data['IncidentType']=='Rape'):
+            self.incident_type = 19
+        else:
+            self.incident_type = 20
         self.time = data['Time']
         self.is_authentic = False
         self.upvotes = 0
         self.downvotes = 0
-        self.post_ID = username + datetime.now().strftime("%m:%d:%Y:%H:%M:%S")
+        self.post_ID = username + datetime.now().strftime("%m%d%Y%H%M%S")
     def is_valid(self):
         return True
     def to_dict(self):
@@ -77,7 +156,7 @@ class PostPropertyForm():
         self.country = data['Country']
         self.address_line1 = data['AddressLine1']
         self.address_line2 = data['AddressLine2']
-        self.post_ID = username + datetime.now().strftime("%m:%d:%Y:%H:%M:%S")
+        self.post_ID = username + datetime.now().strftime("%m%d%Y%H%M%S")
     def is_valid(self):
         return True
     def to_dict(self):
