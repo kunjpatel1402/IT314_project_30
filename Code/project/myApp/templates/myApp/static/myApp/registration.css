@@ -64,6 +64,9 @@
     color: white;
 }
 
+#navbar li span{
+    display: block;
+}
 
 
 /* Importing fonts from Google */
@@ -194,4 +197,14 @@ input:-webkit-autofill:focus {
     -webkit-box-shadow: 3px 3px 3px #b1b1b1,
     -3px -3px 3px #fff;
     -webkit-text-fill-color: #999;
+}
+
+#home{
+    text-align: center;
+}
+
+.padtop{
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-left: 16px;
 }

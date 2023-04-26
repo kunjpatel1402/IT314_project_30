@@ -8,9 +8,13 @@ from django.contrib.auth import logout as auth_logout
 from .forms import LoginForm, RegisterationForm, PostIncidentForm, PostPropertyForm, ChangePasswordForm
 #from apscheduler.schedulers.background import BackgroundScheduler
 import pymongo
+from django.test import Client
 import math
 import sys, os
-
+# import datetime
+from datetime import datetime
+from subprocess import Popen, PIPE
+from threading import Thread
 
 client = pymongo.MongoClient("mongodb+srv://superuser:superuser%40SWE30@swe-cluster.xxvswrz.mongodb.net/?retryWrites=true&w=majority")
 
@@ -23,17 +27,20 @@ user_collection = db["users"]
 incident_collection = db["incident"]
 property_collection = db["properties"]
 
-
 def index(request):
     username = request.session.get('username')
+    Thread(target=hourly_function).start()
+    # response = Client().post('/appforcelery/')   
+    # print(response)
     if username is not None:
         return render(request, 'myApp/reg_hmpg.html')
     else:
         return render(request, 'myApp/unreg_hmpg.html')
 
-
 def login(request):
     if request.method == 'POST':
+        print(request.POST)
+        print("here")
         form = LoginForm(request.POST)
         if form.is_valid():
             query = {"UserName": form.UserName, "Password": form.Password}
@@ -47,6 +54,7 @@ def login(request):
                 return redirect('/myApp')
             else:
                 error_message = "Invalid username or password"
+                print("error")
                 return render(request, 'myApp/login.html', {'error_message': error_message})
         else:
             error_message = "Enter credentials"
@@ -85,7 +93,6 @@ def logout(request):
     request.session.flush()
     return redirect('/myApp')
 
-
 def calc_distance(lat1, long1, lat2, long2):
     R = 6371  # Earth's radius in kilometers
     lat1, long1, lat2, long2 = map(math.radians, [lat1, long1, lat2, long2])
@@ -105,37 +112,38 @@ def hourly_function():
     #Same goes for property = {longitude, latitude}
     # Call calculate_score
 
-    db2 = client["swe_test_db"]
-    INC = db2["incidents"]
+    # db2 = client["swe_test_db"]
+    # INC = db2["incident"]
 
-    incident_list = []
+    incident_list = list(incident_collection.find())
 
-    for post in INC.find():
-        longitude1 = post['Longitude']
-        latitude1 = post['Latitude']
-        coeff = post['Incident_type']
-        # retrieve incident time
-        # retrieve post id
+    # for post in incident_collection.find():
+    #     longitude1 = post['longitude']
+    #     latitude1 = post['latitude']
+    #     coeff = post['incident_type']
+    #     thattime = post['time']# retrieve incident time
+    #     postid = post['post_ID']# retrieve post id
 
-        incident_data = {'Longitude':longitude1, 'Latitude':latitude1, 'Incident_type':coeff}
-        incident_list.append(incident_data)
-
-    db3 = client["swe_test_db"]
-    PROP = db3["properties"]
-
-
-    property_list = []
-
-    for post in PROP.find():
-        longitude2 = post['Longitude']
-        latitude2 = post['Latitude']
-        # retrieve property id
-        # retrieve score
+    #     incident_data = {'longitude':longitude1, 'latitude':latitude1, 'incident_type':coeff, 'time':thattime, 'post_ID':postid}
+    #     incident_list.append(incident_data)
+    #print(incident_list, file=open('incident_list.txt', 'w'))
+    # db3 = client["swe_test_db"]
+    # PROP = db3["properties"]
 
 
-        property_data = {'Longitude': longitude2, 'Latitude': latitude2, 'Score':prop_score}
-        property_list.append(property_data)
+    property_list = list(property_collection.find())
 
+    # for post in property_collection.find():
+    #     longitude2 = post['longitude']
+    #     latitude2 = post['latitude']
+    #     prop_score = post['score']# retrieve score
+    #     prop_id = post['post_ID']# retrieve property id
+        
+
+
+    #     property_data = {'longitude': longitude2, 'latitude': latitude2, 'score':prop_score, 'post_ID':prop_id}
+    #     property_list.append(property_data)
+    #print(property_list, file=open('property_list.txt', 'w'))
     calculate_score(property_list, incident_list)
 
 
@@ -145,34 +153,53 @@ def calculate_score(property_list, incident_list):
     # di = distance difference
     # ti = time difference
 
-    k1 = 5
-    k2 = 12
+    k1 = 1
+    k2 = 1
 
     for property_data in property_list:
-        longitude1 = property_data['Longitude']
-        latitude1 = property_data['Latitude']
-        # get score variable
+        longitude1 = property_data['longitude']
+        latitude1 = property_data['latitude']
+        prop_score = property_data['score']# get score variable
 
         numerator = 0
         denominator = 0
 
         for incident_data in incident_list:
-            longitude2 = post['Longitude']
-            latitude2 = post['Latitude']
-            coeff = post['Incident_type']
-            # retrieve incident time
-            # retrieve post id
+            longitude2 = incident_data['longitude']
+            latitude2 = incident_data['latitude']
+            coeff = incident_data['incident_type']
+            thattime = incident_data['time']# retrieve incident time
+            postid = incident_data['post_ID']# retrieve post id
 
             di = calc_distance(latitude1, longitude1, latitude2, longitude2)
             # calculate time difference ti
-            ti = 0
+            current_time = datetime.utcnow().isoformat()
+            curdt = datetime.fromisoformat(current_time)
+            thatdt = datetime.fromisoformat(thattime)
+            
+            monthdiff = curdt.month - thatdt.month
+            daydiff = curdt.day - thatdt.day
+            hourdiff = curdt.hour - thatdt.hour
 
-            numerator += coeff*exp(-k1*ti)*exp(-k2*di)
-            denominator += coeff*exp(-k2*ti)
+            ti = monthdiff*30*24 + daydiff*24 + hourdiff    # May need to modify
 
-        score = (numerator/denominator)*100
+            numerator += math.exp(-k1*ti)*math.exp(-k2*di)    #removed coeff
+            denominator += math.exp(-k2*ti)               #removed coeff
 
+        prop_score = (numerator/denominator)*100
+        # prop_score = 1234
+        # property_data['score'] = 1234
+        property_data['score'] = prop_score
         # store the score in the database for this property using property_id
+        
+        # for prop_id, prop_score in property_list:
+        #property_collection.update_one({'post_ID': property_data['post_ID']}, {'$set': {'score': prop_score}})
+    property_list = sorted(property_list, key=lambda d: d['score'])
+    length = len(property_list)
+    for i in range(len(property_list)):
+        property_list[i]['score'] = ((i+1.0)/length)*100
+    for property_data in property_list:
+        property_collection.update_one({'post_ID': property_data['post_ID']}, {'$set': {'score': property_data['score']}})
 
 
 
@@ -183,24 +210,21 @@ def calculate_score(property_list, incident_list):
 
 
 
-
-
-
 def PostIncident(request):
     username = request.session.get('username')
     #print(username)
     if username is not None:
-        if (request.method == 'POST'):
-            #print(request.POST)
+        if (request.method == 'POST'):  
+            print(request.POST)
             form = PostIncidentForm(request.POST, username)
             if form.is_valid():
                 incident_collection.insert_one(form.to_dict())
-                return HttpResponse("Post Successful")
+                return redirect('/myApp')
             else:
                 #print("Here2")
                 return HttpResponse("Post Failed")
         else:
-            return render(request, 'myApp/postIncident.html')
+            return render(request, 'myApp/postIncident.html', {'user': username})
     else:
         return redirect('/myApp/login/')
 
@@ -218,7 +242,7 @@ def PostProperty(request):
                 #print("Here2")
                 return HttpResponse("Post Failed")
         else:
-            return render(request, 'myApp/PostProperty.html')
+            return render(request, 'myApp/PostProperty.html', {'user': username})
     else:
         return redirect('/myApp/login/')
 
@@ -229,28 +253,40 @@ def PostProperty(request):
 def profile(request):
     username = request.session.get('username')
     if username is not None:
-        return render(request, 'myApp/profile.html', {'username': request.user.username})
+        user = user_collection.find_one({"UserName": username})
+        #print(user)
+        return render(request, 'myApp/profile.html', {'user': user})
     else:
         return redirect('/myApp/login/')
-
-
-def SeePosts(request, PostID):
+    
+def editprofile(request):
     username = request.session.get('username')
+    print("here-----------------")
     if username is not None:
-        if request.method == 'GET':
-            post = incident_collection.find_one({"post_ID": PostID})
-            author = user_collection.find_one({"UserName": post['author']})
-            return render(request, 'myApp/SeePosts.html', {'post': post, 'author': author})
+        if (request.method == 'POST'):
+            print(request.POST)
+            form = EditDetailsForm(request.POST)
+            if form.is_valid():
+                user_collection.update_one({"UserName": username}, {"$set": form.to_dict()})
+                return redirect('/myApp/profile/')
+            else:
+                return HttpResponse("Profile Update Failed")
+        else:
+            user = user_collection.find_one({"UserName": username})
+            return render(request, 'myApp/EditDetails.html', {'user': user})
     else:
         return redirect('/myApp/login/')
+
+
 
 
 def SeeProfiles(request, ProfileID):
     username = request.session.get('username')
     if username is not None:
         if (request.method == 'GET'):
-            if user_collection.find_one({"username": ProfileID}) is not None:
-                return render(request, 'myApp/SeeProfiles.html', {'username': ProfileID})
+            user = user_collection.find_one({"UserName": ProfileID})
+            if user is not None:
+                return render(request, 'myApp/SeeProfile.html', {'user': user})
             else:
                 return HttpResponse("User does not exist")
     else:
@@ -266,6 +302,7 @@ def Upvote(request, PostID):
             myuser = user_collection.find_one({"UserName": username})
             #print("here\n\n\n")
             #print(myuser)
+            curr = post['upvotes'] - post['downvotes']
             downvoted = myuser['downvoted']
             upvoted = myuser['upvoted']
             #print(downvoted)
@@ -278,7 +315,7 @@ def Upvote(request, PostID):
                 upvoted.pop(PostID)
                 new_values = {"$set": {"upvoted": upvoted}}
                 user_collection.update_one({"UserName": username}, new_values)
-                return HttpResponse(status = 200)
+                return JsonResponse({"status": "neutral", "votes": curr-1})
             else:
                 #print("upvoting")
                 new_values = {"$set": {"upvotes": post['upvotes'] + 1}}
@@ -286,17 +323,27 @@ def Upvote(request, PostID):
                 upvoted[PostID] = True
                 new_values = {"$set": {"upvoted": upvoted}}
                 user_collection.update_one({"UserName": username}, new_values)
-                return HttpResponse(status = 200)
+                return JsonResponse({"status": "upvoted", "votes": curr+1})
     else:
         return redirect('/myApp/login/')
-    
+
+def find_post(PostID):
+    query = {"post_ID": PostID}
+    post = incident_collection.find_one(query)
+    return post
+
+def find_user(username):
+    myuser = user_collection.find_one({"UserName": username})
+    return myuser
+
 def Downvote(requests, PostID):
     username = requests.session.get('username')
     if username is not None:
         if (requests.method == 'GET'):
             query = {"post_ID": PostID}
-            post = incident_collection.find_one(query)
-            myuser = user_collection.find_one({"UserName": username})
+            post = find_post(PostID)
+            curr = post['upvotes'] - post['downvotes']
+            myuser = find_user(username)
             downvoted = myuser['downvoted']
             upvoted = myuser['upvoted']
             if (post is None) or (upvoted.get(PostID) != None):
@@ -304,57 +351,131 @@ def Downvote(requests, PostID):
             elif downvoted.get(PostID) != None:
                 new_values = {"$set": {"downvotes": post['downvotes'] - 1}}
                 incident_collection.update_one(query, new_values)
-                downvoted = downvoted.pop(PostID)
+                downvoted.pop(PostID)
                 new_values = {"$set": {"downvoted": downvoted}}
                 user_collection.update_one({"UserName": username}, new_values)
-                return HttpResponse(status = 200)
+                return JsonResponse({"status": "neutral", "votes": curr+1})
             else:
                 new_values = {"$set": {"downvotes": post['downvotes'] + 1}}
                 incident_collection.update_one(query, new_values)
                 downvoted[PostID] = True
                 new_values = {"$set": {"downvoted": downvoted}}
                 user_collection.update_one({"UserName": username}, new_values)
-                return HttpResponse(status = 200)
+                return JsonResponse({"status": "downvoted", "votes": curr-1})
     else:
         return redirect('/myApp/login/')
 
 def Changepassword(request):
-    if request.method == 'POST':
-        form = ChangePasswordForm(request.POST)
-        if form.is_valid():
-            query = {"UserName": form.UserName}
-            user = user_collection.find_one(query)
-            if user is None:
-                error_message = "User does not exist"
-                return render(request, 'myApp/changePassword.html', {'error_message': error_message})
+    username = request.session.get('username')
+    if username is not None:
+        if request.method == 'POST':
+            form = ChangePasswordForm(request.POST)
+            if form.is_valid():
+                query = {"UserName": form.UserName}
+                user = user_collection.find_one(query)
+                if user is None:
+                    error_message = "User does not exist"
+                    return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'user':username})
+                else:
+                    if user['DOB'] != form.DOB:
+                        error_message = "Incorrect Date of Birth"
+                        return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'user':username})
+                    else:
+                        query = {"UserName": form.UserName}
+                        new_values = {"$set": {"Password": form.new_password}}
+                        user_collection.update_one(query, new_values)
+                        return redirect('/myApp/login/')
             else:
-                if user['DOB'] != form.DOB:
-                    error_message = "Incorrect Date of Birth"
+                error_message = "Passwords do not match"
+                return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'user':username})
+        else:
+            return render(request, 'myApp/changePassword.html',{'user':username})
+    else:
+        if request.method == 'POST':
+            form = ChangePasswordForm(request.POST)
+            if form.is_valid():
+                query = {"UserName": form.UserName}
+                user = user_collection.find_one(query)
+                if user is None:
+                    error_message = "User does not exist"
                     return render(request, 'myApp/changePassword.html', {'error_message': error_message})
                 else:
-                    query = {"UserName": form.UserName}
-                    new_values = {"$set": {"Password": form.new_password}}
-                    user_collection.update_one(query, new_values)
-                    return redirect('/myApp/login/')
+                    if user['DOB'] != form.DOB:
+                        error_message = "Incorrect Date of Birth"
+                        return render(request, 'myApp/changePassword.html', {'error_message': error_message})
+                    else:
+                        query = {"UserName": form.UserName}
+                        new_values = {"$set": {"Password": form.new_password}}
+                        user_collection.update_one(query, new_values)
+                        return redirect('/myApp/login/')
+            else:
+                error_message = "Passwords do not match"
+                return render(request, 'myApp/changePassword.html', {'error_message': error_message})
         else:
-            error_message = "Passwords do not match"
-            return render(request, 'myApp/changePassword.html', {'error_message': error_message})
-    else:
-        return render(request, 'myApp/changePassword.html')
+            return render(request, 'myApp/changePassword.html')
     
 def IncidentFeed(request):
     if (request.method == 'GET'):
         posts = list(incident_collection.find())
-        #print(posts)
-        return render(request, 'myApp/IncidentFeed.html', {'posts': posts})
+        username = request.session.get('username')
+        user = user_collection.find_one({"UserName": username})
+        print(user)
+        return render(request, 'myApp/IncidentFeed.html', {'posts': posts, 'user': user})
     else:
         return HttpResponse("Error")
     
 def PropertyFeed(request):
     if (request.method == 'GET'):
-        posts = property_collection.find()
+        posts = property_collection.find().sort("score", 1)
         #print(posts)
-        return render(request, 'myApp/PropertyFeed.html', {'posts': posts})
+        username = request.session.get('username')
+        user = user_collection.find_one({"UserName": username})
+        return render(request, 'myApp/PropertyFeed.html', {'posts': posts, 'user': user})
     else:
         return HttpResponse("Error")
     
+def SearchIncident(request):
+    username = request.session.get('username')
+    if username is not None:
+        if (request.method == 'POST'):
+            prompt = request.POST['prompt']
+            print("prompt: " + prompt)
+            posts = incident_collection.find({'$text': {'$search':prompt}},{ 'score': { '$meta': "textScore" } })
+            posts.sort([('score', {'$meta': 'textScore'})])
+            posts = list(posts)
+            #print(posts)
+            return render(request, 'myApp/IncidentFeed.html', {'posts': posts})
+        else:
+            return HttpResponse("Error")
+    else:
+        return redirect('/myApp/login/')
+    
+    
+def SearchProperty(request):
+    username = request.session.get('username')
+    if username is not None:
+        if (request.method == 'POST'):
+            prompt = request.POST['prompt']
+            print("prompt: " + prompt)
+            posts = property_collection.find({'$text': {'$search':prompt}},{ 'score': { '$meta': "textScore" } })
+            posts.sort([('score', {'$meta': 'textScore'})])
+            posts = list(posts)
+            #print(posts)
+            return render(request, 'myApp/PropertyFeed.html', {'posts': posts})
+        else:
+            return HttpResponse("Error")
+    else:
+        return redirect('/myApp/login/')
+    
+def myPost(request):
+    username = request.session.get('username')
+    if username is not None:
+        if (request.method == 'GET'):
+            posts = incident_collection.find({'author': username})
+            posts = list(posts)
+            #print(posts)
+            return render(request, 'myApp/IncidentFeed.html', {'posts': posts})
+        else:
+            return HttpResponse("Error")
+    else:
+        return redirect('/myApp/login/')
