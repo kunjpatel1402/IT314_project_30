@@ -152,7 +152,8 @@ body:before {
 
 #navbar {
     display: flex;
-    z-index:1; /*Add this*/
+    z-index: 1;
+    /*Add this*/
     align-items: center;
     position: sticky;
     top: 0px;
@@ -248,4 +249,88 @@ body:before {
 
 #err {
     color: red;
+}
+
+.dropdown-toggle {
+    color: grey;
+    font-size: 100%;
+    font-family: 'Comfortaa', cursive;
+    text-decoration: none;
+    border-radius: 10px;
+    background-color: transparent;
+    */ transition: all 0.3s ease;
+}
+
+.dropdown-toggle:hover,
+.dropdown-toggle:focus {
+    color: #fff;
+    background-color: #333;
+    outline: none;
+}
+
+.dropdown-menu {
+    position: relative;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    display: none;
+    min-width: 200px;
+    padding: 10px;
+    margin: 5px 0 0;
+    font-size: 1 rem;
+    text-align: left;
+    list-style: none;
+    background-color: black;
+    opacity: 0.75;
+
+}
+
+.dropdown-menu a {
+    /* display: block; */
+    color: grey;
+    font-size: 100%;
+    font-family: 'Comfortaa', cursive;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu a:focus {
+    color: #fff;
+    background-color: #333;
+    outline: none;
+}
+
+@media screen and (max-width: 1100px) {
+    #navbar ul {
+        display: none;
+    }
+
+
+
+    #toggle-menu-btn {
+        display: block;
+        text-align: right;
+        color: grey;
+        box-sizing: inherit;
+        font-size: 100%;
+        font-family: 'Comfortaa', cursive;
+        text-decoration: none;
+
+    }
+
+    #logo img {
+        height: 5%;
+        width: 80%;
+        filter: invert(100%);
+        margin: 10px;
+    }
+
+
+}
+
+@media screen and (min-width: 1101px) {
+    #toggle-menu-btn {
+        display: none;
+    }
 }
