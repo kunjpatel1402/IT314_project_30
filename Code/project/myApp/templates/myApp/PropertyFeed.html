@@ -102,7 +102,7 @@
   <div class="input-group rounded" id="search">
     <form action="/myApp/searchProperty/" method="POST">
       {% csrf_token %}
-      <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" name="prompt" />
+      <!-- <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" name="prompt" /> -->
       <!-- <span class="input-group-text border-0" id="search-addon"> -->
       <!-- </span> -->
     </form>
@@ -126,8 +126,12 @@
         </div>
      
       <hr>
-      <p class="card-text"><b>Address: </b>{{post.address_line1}} , {{post.city}},{{post.state}},{{post.country}}</p>
+      <p class="card-text">  <b>Address: </b>{{post.address_line1}} , {{post.city}}, {{post.state}}, {{post.country}}   <a href="https://www.google.com/maps?q={{post.latitude}},{{post.longitude}}" target="_blank">
+        <i class="fas fa-map-marker-alt style="color: blue;"></i>
+      </a></p> 
+
       <p class="card-text">{{post.description}}</p>
+    
     </div>
     <!-- <strong>{{post}}</strong>
       <strong>{{user}}</strong>
