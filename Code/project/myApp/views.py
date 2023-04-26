@@ -218,7 +218,7 @@ def PostProperty(request):
             form = PostPropertyForm(request.POST, username)
             if form.is_valid():
                 property_collection.insert_one(form.to_dict())
-                return HttpResponse("Post Successful")
+                return redirect('/myApp')
             else:
                 #print("Here2")
                 return HttpResponse("Post Failed")

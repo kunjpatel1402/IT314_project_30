@@ -71,13 +71,13 @@
             Post Property Information
         </div>
         <form class="p-3 mt-3" action="/myApp/postProperty/" method="post">
-            <!-- {% csrf_token %} -->
+            {% csrf_token %}
             <div class="container">
                 <div class="row">
                     <div class="column">
                         <div class="form-field d-flex align-items-center">
                             <span class="far fa-user"></span>
-                            <input type="text" name="author" placeholder="Name" required />
+                            <input type="text" name="Title" placeholder="Title" required />
                         </div>
                     </div>
                 </div>
