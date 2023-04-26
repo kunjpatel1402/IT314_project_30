@@ -63,7 +63,9 @@ def login(request):
 
 
 def register(request):
-    if request.method == 'POST':
+    if request.session.get('username') is not None:
+        return redirect('/myApp')
+    elif request.method == 'POST':
         #print(request.POST)
         form = RegisterationForm(request.POST)
         if form.is_valid():
@@ -375,21 +377,21 @@ def Changepassword(request):
                 user = user_collection.find_one(query)
                 if user is None:
                     error_message = "User does not exist"
-                    return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'user':username})
+                    return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'myuser':username})
                 else:
                     if user['DOB'] != form.DOB:
                         error_message = "Incorrect Date of Birth"
-                        return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'user':username})
+                        return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'myuser':username})
                     else:
                         query = {"UserName": form.UserName}
                         new_values = {"$set": {"Password": form.new_password}}
                         user_collection.update_one(query, new_values)
-                        return redirect('/myApp/login/')
+                        return redirect('/myApp/profile/')
             else:
                 error_message = "Passwords do not match"
-                return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'user':username})
+                return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'myuser':username})
         else:
-            return render(request, 'myApp/changePassword.html',{'user':username})
+            return render(request, 'myApp/changePassword.html',{'myuser':username})
     else:
         if request.method == 'POST':
             form = ChangePasswordForm(request.POST)

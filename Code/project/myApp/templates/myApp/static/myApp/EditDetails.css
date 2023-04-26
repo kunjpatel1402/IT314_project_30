@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+
 body:before {
     content:"";
     position:fixed;
@@ -45,6 +47,7 @@ body:before {
 }
 
 #navbar{
+    z-index: 1;
     display: flex;
     align-items: center;
     position: sticky;
