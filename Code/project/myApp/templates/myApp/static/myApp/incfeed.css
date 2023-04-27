@@ -269,6 +269,7 @@ h5{
   #logo img{
       height: 5%;
       width: 80%;
+      max-width: 320px;
       filter: invert(100%);
       margin: 10px;
   }
