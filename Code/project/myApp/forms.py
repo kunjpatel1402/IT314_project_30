@@ -6,6 +6,8 @@ class LoginForm():
         self.UserName = data['UserName']
         self.Password = data['Password']
     def is_valid(self):
+        if (self.UserName == '' or self.Password == ''): 
+            return False
         return True
 
 class RegisterationForm():
@@ -20,6 +22,12 @@ class RegisterationForm():
         self.UpVoted = {}
         self.DownVoted = {}
     def is_valid(self):
+        if (self.Email.find('@') == -1 or self.Email.find('.') == -1):
+            return False
+        if (self.UserName == '' or self.FirstName == '' or self.LastName == '' or self.Email == '' or self.Password == '' or self.ConfirmPassword == '' or self.DOB == ''):
+            return False
+        if (self.Password != self.ConfirmPassword):
+            return False
         return True
     def to_dict(self):
         return {
@@ -126,6 +134,8 @@ class PostIncidentForm():
         self.downvotes = 0
         self.post_ID = username + datetime.now().strftime("%m%d%Y%H%M%S")
     def is_valid(self):
+        if (self.title == '' or self.description == '' or self.longitude == '' or self.latitude == '' or self.author == '' or self.incident_type == '' or self.time == ''):
+            return False
         return True
     def to_dict(self):
         return {
@@ -158,6 +168,8 @@ class PostPropertyForm():
         self.address_line2 = data['AddressLine2']
         self.post_ID = username + datetime.now().strftime("%m%d%Y%H%M%S")
     def is_valid(self):
+        if (self.title == '' or self.description == '' or self.longitude == '' or self.latitude == '' or self.author == '' or self.pincode == '' or self.city == '' or self.state == '' or self.country == '' or self.address_line1 == '' or self.address_line2 == ''):
+            return False
         return True
     def to_dict(self):
         return {
@@ -183,11 +195,17 @@ class ChangePasswordForm():
         self.new_password = data['newPassword']
         self.confirm_password = data['confirmNewPassword']
     def is_valid(self):
-        return (self.confirm_password==self.new_password)
+        if (self.UserName == '' or self.DOB == '' or self.new_password == '' or self.confirm_password == ''): 
+            return False
+        if (self.new_password != self.confirm_password):
+            return False
+        return True
     
 class ForgotPasswordForm():
     def __init__(self, data):
         self.UserName = data['UserName']
         self.DOB = data['DOB']
     def is_valid(self):
+        if (self.UserName == '' or self.DOB == ''):
+            return False
         return True

@@ -75,16 +75,26 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': 'swe_test_db',
+#         'CLIENT' : {
+#             'host': 'mongodb+srv://superuser:superuser%40SWE30@swe-cluster.xxvswrz.mongodb.net/?retryWrites=true&w=majority',
+#         }
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'swe_test_db',
-        'CLIENT' : {
-            'host': 'mongodb+srv://superuser:superuser%40SWE30@swe-cluster.xxvswrz.mongodb.net/?retryWrites=true&w=majority',
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',
     }
 }
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SESSION_ENGINE = "django.contrib.sessions.backends.file"
+SESSION_FILE_PATH = BASE_DIR / "sessions"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

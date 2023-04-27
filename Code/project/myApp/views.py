@@ -38,8 +38,8 @@ def index(request):
 
 def login(request):
     if request.method == 'POST':
-        print(request.POST)
-        print("here")
+        (request.POST)
+        # print("here")
         form = LoginForm(request.POST)
         if form.is_valid():
             query = {"UserName": form.UserName, "Password": form.Password}
@@ -53,10 +53,10 @@ def login(request):
                 return redirect('/myApp')
             else:
                 error_message = "Invalid username or password"
-                print("error")
+                # print("error")
                 return render(request, 'myApp/login.html', {'error_message': error_message})
         else:
-            error_message = "Enter credentials"
+            error_message = "Required fields are invalid or empty, please try again"
             return render(request, 'myApp/login.html', {'error_message': error_message})
     else:
         return render(request, 'myApp/login.html')
@@ -86,6 +86,9 @@ def register(request):
             else:
                 error_message = "Username already exists"
                 return render(request, 'myApp/register.html', {'error_message': error_message})
+        else:
+            error_message = "Required fields are invalid or empty, please try again"
+            return render(request, 'myApp/register.html', {'error_message': error_message})
     else:
         return render(request, 'myApp/register.html')
 
@@ -106,7 +109,7 @@ def calc_distance(lat1, long1, lat2, long2):
     return d
 
 def hourly_function():
-    print("started hourly function---------------------------------------\n\n\n")
+    # print("started hourly function---------------------------------------\n\n\n")
     #This function will retrieve all the incidents present till current time
     #Also all properties present till the current time
     #It will create two dictionaries 'INC' and 'PROP', where all the respective data is stored
@@ -147,11 +150,11 @@ def hourly_function():
     #     property_list.append(property_data)
     #print(property_list, file=open('property_list.txt', 'w'))
     calculate_score(property_list, incident_list)
-    print("Ended hourly function---------------------------------------\n\n\n")
+    # print("Ended hourly function---------------------------------------\n\n\n")
 
 
 def calculate_score(property_list, incident_list):
-    print("calculate score started--------------------------------\n\n\n")
+    # print("calculate score started--------------------------------\n\n\n")
     #The function is based on following formula:
     # (SIGMA(Ci * exp(-k1 * ti) * exp(-k2 * di))) / SIGMA(Ci * exp(-k1 * ti)) * 100
     # di = distance difference
@@ -204,7 +207,7 @@ def calculate_score(property_list, incident_list):
         property_list[i]['score'] = ((i+1.0)/length)*100
     for property_data in property_list:
         property_collection.update_one({'post_ID': property_data['post_ID']}, {'$set': {'score': property_data['score']}})
-    print("calculate score ended--------------------------------\n\n\n")
+    # print("calculate score ended--------------------------------\n\n\n")
 
 
 
@@ -217,14 +220,14 @@ def PostIncident(request):
     #print(username)
     if username is not None:
         if (request.method == 'POST'):  
-            print(request.POST)
+            # print(request.POST)
             form = PostIncidentForm(request.POST, username)
             if form.is_valid():
                 incident_collection.insert_one(form.to_dict())
                 return redirect('/myApp')
             else:
-                #print("Here2")
-                return HttpResponse("Post Failed")
+                error_message = "Required fields are invalid or empty, please try again."
+                return render(request, 'myApp/postIncident.html', {'user': username, 'error_message': error_message})
         else:
             return render(request, 'myApp/postIncident.html', {'user': username})
     else:
@@ -241,8 +244,8 @@ def PostProperty(request):
                 property_collection.insert_one(form.to_dict())
                 return redirect('/myApp')
             else:
-                #print("Here2")
-                return HttpResponse("Post Failed")
+                error_message = "Required fields are invalid or empty, please try again."
+                return render(request, 'myApp/PostProperty.html', {'user': username, 'error_message': error_message})
         else:
             return render(request, 'myApp/PostProperty.html', {'user': username})
     else:
@@ -263,10 +266,10 @@ def profile(request):
     
 def editprofile(request):
     username = request.session.get('username')
-    print("here-----------------")
+    # print("here-----------------")
     if username is not None:
         if (request.method == 'POST'):
-            print(request.POST)
+            # print(request.POST)
             form = EditDetailsForm(request.POST)
             if form.is_valid():
                 user_collection.update_one({"UserName": username}, {"$set": form.to_dict()})
@@ -393,7 +396,7 @@ def Changepassword(request):
                         user_collection.update_one(query, new_values)
                         return redirect('/myApp/profile/')
             else:
-                error_message = "Passwords do not match"
+                error_message = "Required fields are invalid or empty, please try again"
                 return render(request, 'myApp/changePassword.html', {'error_message': error_message,'myuser':username})
         else:
             return render(request, 'myApp/changePassword.html',{'myuser':username})
@@ -416,7 +419,7 @@ def Changepassword(request):
                         user_collection.update_one(query, new_values)
                         return redirect('/myApp/login/')
             else:
-                error_message = "Passwords do not match"
+                error_message = "Required fields are invalid or empty, please try again"
                 return render(request, 'myApp/changePassword.html', {'error_message': error_message})
         else:
             return render(request, 'myApp/changePassword.html')
@@ -426,7 +429,7 @@ def IncidentFeed(request):
         posts = list(incident_collection.find())
         username = request.session.get('username')
         user = user_collection.find_one({"UserName": username})
-        print(user)
+        # print(user)
         return render(request, 'myApp/IncidentFeed.html', {'posts': posts, 'user': user, 'myuser':username})
     else:
         return HttpResponse("Error")
@@ -446,7 +449,7 @@ def SearchIncident(request):
     if username is not None:
         if (request.method == 'POST'):
             prompt = request.POST['prompt']
-            print("prompt: " + prompt)
+            # print("prompt: " + prompt)
             posts = incident_collection.find({'$text': {'$search':prompt}},{ 'score': { '$meta': "textScore" } })
             posts.sort([('score', {'$meta': 'textScore'})])
             posts = list(posts)
@@ -457,7 +460,7 @@ def SearchIncident(request):
     else:
         if (request.method == 'POST'):
             prompt = request.POST['prompt']
-            print("prompt: " + prompt)
+            # print("prompt: " + prompt)
             posts = incident_collection.find({'$text': {'$search':prompt}},{ 'score': { '$meta': "textScore" } })
             posts.sort([('score', {'$meta': 'textScore'})])
             posts = list(posts)
@@ -472,7 +475,7 @@ def SearchProperty(request):
     if username is not None:
         if (request.method == 'POST'):
             prompt = request.POST['prompt']
-            print("prompt: " + prompt)
+            # print("prompt: " + prompt)
             posts = property_collection.find({'$text': {'$search':prompt}},{ 'score': { '$meta': "textScore" } })
             posts.sort([('score', {'$meta': 'textScore'})])
             posts = list(posts)
@@ -483,7 +486,7 @@ def SearchProperty(request):
     else:
         if (request.method == 'POST'):
             prompt = request.POST['prompt']
-            print("prompt: " + prompt)
+            # print("prompt: " + prompt)
             posts = property_collection.find({'$text': {'$search':prompt}},{ 'score': { '$meta': "textScore" } })
             posts.sort([('score', {'$meta': 'textScore'})])
             posts = list(posts)
