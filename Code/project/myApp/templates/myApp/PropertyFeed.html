@@ -107,13 +107,12 @@
     </form>
   </div>
   <div class="feeds">
-    
   {%for post in posts%}
   <div class="card feedcard" id="{{post.post_ID}}">
     <div class="card-body">
       <div class="details">
        
-          <h5 class="card-title">{{post.title}}</h5>
+      <a href = "/myApp/SeeProperty/{{post.post_ID}}"><h5 class="card-title">{{post.title}}</h5></a>
       
       </div>
         <div>

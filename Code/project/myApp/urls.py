@@ -20,4 +20,6 @@ urlpatterns = [
     path('searchIncident/', views.SearchIncident, name='SearchIncident'),
     path('searchProperty/', views.SearchProperty, name='SearchProperty'),
     path('myPosts/', views.myPost, name='myPost'),
+    path('SeeIncident/<str:PostID>', views.SeeIncident, name='SeeIncident'),
+    path('SeeProperty/<str:PostID>', views.SeeProperty, name='SeeProperty')
 ]

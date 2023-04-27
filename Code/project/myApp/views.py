@@ -507,3 +507,23 @@ def myPost(request):
             return HttpResponse("Error")
     else:
         return redirect('/myApp/login/')
+    
+def SeeIncident(request, PostID):
+    username = request.session.get('username')
+    if (request.method == 'GET'):
+        post = incident_collection.find_one({'post_ID': PostID})
+        user = user_collection.find_one({"UserName": username})
+        #print(incident)
+        return render(request, 'myApp/SeeIncident.html', {'post': post, 'user': user, 'myuser':username})
+    else:
+        return HttpResponse("Error")
+    
+def SeeProperty(request, PostID):
+    username = request.session.get('username')
+    if (request.method == 'GET'):
+        post = property_collection.find_one({'post_ID': PostID})
+        user = user_collection.find_one({"UserName": username})
+        #print(post)
+        return render(request, 'myApp/SeeProperty.html', {'post': post, 'user': user, 'myuser':username})
+    else:
+        return HttpResponse("Error")
