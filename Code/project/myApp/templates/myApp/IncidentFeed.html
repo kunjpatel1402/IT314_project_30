@@ -95,18 +95,17 @@
 
   </nav>
   {% endif %}
-  <div class="input-group rounded" id="search">
-    <form action="/myApp/searchIncident/" method="POST">
+  <div class="input-group rounded card" id="search">
+    <form action="/myApp/searchProperty/" method="POST">
       {% csrf_token %}
-      <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-        aria-describedby="search-addon" name="prompt" />
+      <input type="search" class="form-control rounded bgblack" placeholder="Search" aria-label="Search" aria-describedby="search-addon" name="prompt" />
       <!-- <span class="input-group-text border-0" id="search-addon"> -->
       <!-- </span> -->
     </form>
   </div>
   <div class="feeds">
     {%for post in posts%}
-    <div class="card" id="{{post.post_ID}}">
+    <div class="card feedcard" id="{{post.post_ID}}">
       <div class="card-body">
         <div class="details">
           <h5 class="card-title">{{post.title}}</h5>
