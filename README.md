@@ -1,8 +1,5 @@
 # IT314_project_30
 
-Here's the text for the README file that you can copy and paste into a new file in your repository:
-
-```
 # 🏠 Property Safety Website 🏠
 
 This repository contains the code for a website designed to assist homebuyers and renters in a city to discover a property's crime and hazard profiles. The website provides users with quick and easy access to Crime Safety and Hazard Safety percentile scores for a given address, allowing them to compare it to other properties in the city. Users can choose to continue their search for other properties or dive deeper into the statistics provided on other sections of the website.
