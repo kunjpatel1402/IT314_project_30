@@ -23,7 +23,7 @@
 
 <body>
    
-  {% if user != None%}
+  {% if myuser != None%}
     <nav id="navbar">
         <div id="logo">
             <a href="/myApp/"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
@@ -102,7 +102,7 @@
   <div class="input-group rounded" id="search">
     <form action="/myApp/searchProperty/" method="POST">
       {% csrf_token %}
-      <!-- <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" name="prompt" /> -->
+      <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" name="prompt" />
       <!-- <span class="input-group-text border-0" id="search-addon"> -->
       <!-- </span> -->
     </form>

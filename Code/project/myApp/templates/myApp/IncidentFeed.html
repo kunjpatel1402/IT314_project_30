@@ -21,7 +21,7 @@
 </head>
 
 <body>
-  {% if user is not None %}
+  {% if myuser is not None %}
   <nav id="navbar">
     <div id="logo">
       <a href="/myApp/"><img src="{%static 'myApp/logo.png'%}" alt=""></a>
@@ -130,7 +130,7 @@
         <hr>
         <p class="card-text">{{post.description}}</p>
       </div>
-      {% if user != None%}
+      {% if myuser != None%}
       <div class="vote-buttons">
         {% with myps=post.post_ID ups=user.upvoted%}
         {% if user.upvoted|get_item:post.post_ID == True %}

@@ -288,11 +288,16 @@ def SeeProfiles(request, ProfileID):
         if (request.method == 'GET'):
             user = user_collection.find_one({"UserName": ProfileID})
             if user is not None:
-                return render(request, 'myApp/SeeProfile.html', {'user': user})
+                return render(request, 'myApp/SeeProfile.html', {'user': user, 'myuser': username})
             else:
                 return HttpResponse("User does not exist")
     else:
-        return redirect('/myApp/login/')
+        if (request.method == 'GET'):
+            user = user_collection.find_one({"UserName": ProfileID})
+            if user is not None:
+                return render(request, 'myApp/SeeProfile.html', {'user': user})
+            else:
+                return HttpResponse("User does not exist")
 
 
 def Upvote(request, PostID):
@@ -377,11 +382,11 @@ def Changepassword(request):
                 user = user_collection.find_one(query)
                 if user is None:
                     error_message = "User does not exist"
-                    return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'myuser':username})
+                    return render(request, 'myApp/changePassword.html', {'error_message': error_message,'myuser':username})
                 else:
                     if user['DOB'] != form.DOB:
                         error_message = "Incorrect Date of Birth"
-                        return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'myuser':username})
+                        return render(request, 'myApp/changePassword.html', {'error_message': error_message,'myuser':username})
                     else:
                         query = {"UserName": form.UserName}
                         new_values = {"$set": {"Password": form.new_password}}
@@ -389,7 +394,7 @@ def Changepassword(request):
                         return redirect('/myApp/profile/')
             else:
                 error_message = "Passwords do not match"
-                return render(request, 'myApp/changePassword.html', {'error_message': error_message},{'myuser':username})
+                return render(request, 'myApp/changePassword.html', {'error_message': error_message,'myuser':username})
         else:
             return render(request, 'myApp/changePassword.html',{'myuser':username})
     else:
@@ -422,7 +427,7 @@ def IncidentFeed(request):
         username = request.session.get('username')
         user = user_collection.find_one({"UserName": username})
         print(user)
-        return render(request, 'myApp/IncidentFeed.html', {'posts': posts, 'user': user})
+        return render(request, 'myApp/IncidentFeed.html', {'posts': posts, 'user': user, 'myuser':username})
     else:
         return HttpResponse("Error")
     
@@ -432,7 +437,7 @@ def PropertyFeed(request):
         #print(posts)
         username = request.session.get('username')
         user = user_collection.find_one({"UserName": username})
-        return render(request, 'myApp/PropertyFeed.html', {'posts': posts, 'user': user})
+        return render(request, 'myApp/PropertyFeed.html', {'posts': posts, 'user': user, 'myuser':username})
     else:
         return HttpResponse("Error")
     
@@ -446,11 +451,20 @@ def SearchIncident(request):
             posts.sort([('score', {'$meta': 'textScore'})])
             posts = list(posts)
             #print(posts)
-            return render(request, 'myApp/IncidentFeed.html', {'posts': posts})
+            return render(request, 'myApp/IncidentFeed.html', {'posts': posts, 'myuser':username})
         else:
             return HttpResponse("Error")
     else:
-        return redirect('/myApp/login/')
+        if (request.method == 'POST'):
+            prompt = request.POST['prompt']
+            print("prompt: " + prompt)
+            posts = incident_collection.find({'$text': {'$search':prompt}},{ 'score': { '$meta': "textScore" } })
+            posts.sort([('score', {'$meta': 'textScore'})])
+            posts = list(posts)
+            #print(posts)
+            return render(request, 'myApp/IncidentFeed.html', {'posts': posts})
+        else:
+            return HttpResponse("Error")
     
     
 def SearchProperty(request):
@@ -463,11 +477,20 @@ def SearchProperty(request):
             posts.sort([('score', {'$meta': 'textScore'})])
             posts = list(posts)
             #print(posts)
-            return render(request, 'myApp/PropertyFeed.html', {'posts': posts})
+            return render(request, 'myApp/PropertyFeed.html', {'posts': posts ,'myuser':username})
         else:
             return HttpResponse("Error")
     else:
-        return redirect('/myApp/login/')
+        if (request.method == 'POST'):
+            prompt = request.POST['prompt']
+            print("prompt: " + prompt)
+            posts = property_collection.find({'$text': {'$search':prompt}},{ 'score': { '$meta': "textScore" } })
+            posts.sort([('score', {'$meta': 'textScore'})])
+            posts = list(posts)
+            #print(posts)
+            return render(request, 'myApp/PropertyFeed.html', {'posts': posts})
+        else:
+            return HttpResponse("Error")
     
 def myPost(request):
     username = request.session.get('username')
