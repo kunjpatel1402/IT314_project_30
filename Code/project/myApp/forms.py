@@ -19,8 +19,8 @@ class RegisterationForm():
         self.Password = data['Password']
         self.ConfirmPassword = data['ConfirmPassword']
         self.DOB = data['DOB']
-        self.UpVoted = {}
-        self.DownVoted = {}
+        self.UpVoted = {'hello': True, 'world': True}
+        self.DownVoted = {'hello': True, 'world': True}
     def is_valid(self):
         if (self.Email.find('@') == -1 or self.Email.find('.') == -1):
             return False
@@ -37,8 +37,8 @@ class RegisterationForm():
             'Email': self.Email,
             'Password': self.Password,
             'DOB': self.DOB,
-            'UpVoted': self.UpVoted,
-            'DownVoted': self.DownVoted
+            'upvoted': self.UpVoted,
+            'downvoted': self.DownVoted
         }
     
 class EditDetailsForm():

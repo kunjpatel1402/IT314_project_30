@@ -37,7 +37,9 @@ def index(request):
 
 
 def login(request):
-    if request.method == 'POST':
+    if request.session.get('username') is not None:
+        return redirect('/myApp')
+    elif request.method == 'POST':
         (request.POST)
         # print("here")
         form = LoginForm(request.POST)
@@ -150,7 +152,7 @@ def hourly_function():
     #     property_list.append(property_data)
     #print(property_list, file=open('property_list.txt', 'w'))
     calculate_score(property_list, incident_list)
-    # print("Ended hourly function---------------------------------------\n\n\n")
+    print("Ended hourly function---------------------------------------")
 
 
 def calculate_score(property_list, incident_list):
@@ -184,16 +186,25 @@ def calculate_score(property_list, incident_list):
             curdt = datetime.fromisoformat(current_time)
             thatdt = datetime.fromisoformat(thattime)
             
+            yeardiff = curdt.year - thatdt.year
             monthdiff = curdt.month - thatdt.month
+            if (monthdiff < 0):
+                yeardiff -= 1
+                monthdiff += 12
             daydiff = curdt.day - thatdt.day
+            if (daydiff < 0):
+                monthdiff -= 1
+                daydiff += 30
             hourdiff = curdt.hour - thatdt.hour
-
-            ti = monthdiff*30*24 + daydiff*24 + hourdiff    # May need to modify
-
-            numerator += math.exp(-k1*ti)*math.exp(-k2*di)    #removed coeff
-            denominator += math.exp(-k2*ti)               #removed coeff
-
-        prop_score = (numerator/denominator)*100
+            if (hourdiff < 0):
+                daydiff -= 1
+                hourdiff += 24
+            ti = yeardiff + monthdiff/12 + daydiff/30/12 + hourdiff/24/30/12    # May need to modify
+            #if (ti >= 0):
+            k2 = incident_data['incident_type']
+            numerator += math.exp(-(ti+1e-12))*math.exp(-(di+1e-12))*1e10*k2    #removed coeff
+                #denominator += math.exp(-k2*ti)               #removed coeff    
+        prop_score = (numerator)*100
         # prop_score = 1234
         # property_data['score'] = 1234
         property_data['score'] = prop_score
@@ -204,8 +215,10 @@ def calculate_score(property_list, incident_list):
     property_list = sorted(property_list, key=lambda d: d['score'])
     length = len(property_list)
     for i in range(len(property_list)):
-        property_list[i]['score'] = ((i+1.0)/length)*100
+        #print(property_list[i]['score'])
+        property_list[i]['score'] = ((length - i*1.0)/length)*99.99999999999999999
     for property_data in property_list:
+        #print(property_data['score'], property_data['title'])
         property_collection.update_one({'post_ID': property_data['post_ID']}, {'$set': {'score': property_data['score']}})
     # print("calculate score ended--------------------------------\n\n\n")
 
@@ -227,9 +240,9 @@ def PostIncident(request):
                 return redirect('/myApp')
             else:
                 error_message = "Required fields are invalid or empty, please try again."
-                return render(request, 'myApp/postIncident.html', {'user': username, 'error_message': error_message})
+                return render(request, 'myApp/PostIncident.html', {'user': username, 'error_message': error_message})
         else:
-            return render(request, 'myApp/postIncident.html', {'user': username})
+            return render(request, 'myApp/PostIncident.html', {'user': username})
     else:
         return redirect('/myApp/login/')
 
@@ -502,7 +515,7 @@ def myPost(request):
             posts = incident_collection.find({'author': username})
             posts = list(posts)
             #print(posts)
-            return render(request, 'myApp/IncidentFeed.html', {'posts': posts})
+            return render(request, 'myApp/IncidentFeed.html', {'posts': posts, 'myuser':username})
         else:
             return HttpResponse("Error")
     else:
