@@ -15,7 +15,7 @@ import sys, os
 from datetime import datetime
 from threading import Thread
 
-client = pymongo.MongoClient("mongodb+srv://superuser:superuser%40SWE30@swe-cluster.xxvswrz.mongodb.net/?retryWrites=true&w=majority")
+client = pymongo.MongoClient("DB_KEY")
 
 # main database (switch to main database after testing only)
 # db = client["swe_db"]
